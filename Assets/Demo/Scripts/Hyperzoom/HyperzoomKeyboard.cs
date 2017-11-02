@@ -15,9 +15,9 @@ public class HyperzoomKeyboard : HyperzoomInteraction
     void UpdateKeyboard()
     {
         // keyboard left arrow
-        if (Input.GetKeyDown(KeyCode.LeftArrow)) SelectedPreviousFocus();
+        if (Input.GetKeyDown(KeyCode.LeftArrow)) SelectedPreviousTarget();
         // keyboard right arrow
-        if (Input.GetKeyDown(KeyCode.RightArrow)) SelectedNextFocus();
+        if (Input.GetKeyDown(KeyCode.RightArrow)) SelectedNextTarget();
         // keyboard up arrow
         if (Input.GetKeyDown(KeyCode.UpArrow)) ZoomedIn();
         // keyboard down arrow

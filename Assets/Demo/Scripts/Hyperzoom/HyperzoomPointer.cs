@@ -29,12 +29,17 @@ public class HyperzoomPointer : HyperzoomInteraction, IBeginDragHandler, IDragHa
     /// <summary>
     /// The x,y multiplier affects touch rotations. The z multiplier affects pinch zooms
     /// </summary>
-    private Vector3 pointerMultiplier = Vector3.one;
+    private Vector2 rotationMultiplier = Vector2.one;
 
     /// <summary>
     /// This multiplier to applied to mouse scroll-wheel zooms
     /// </summary>
     private float scrollWheelMultiplier = 0.5f;
+
+    /// <summary>
+    /// This multiplier to applied to multitouch pinched zooms
+    /// </summary>
+    private float pinchMultiplier = 0.015f;
 
     /// <summary>
     /// tracks whether we're dragging or not
@@ -109,9 +114,8 @@ public class HyperzoomPointer : HyperzoomInteraction, IBeginDragHandler, IDragHa
         {
             // calculate distance from starting point
             Vector2 startDelta = eventData.position - pointerPositions[eventData.pointerId].start;
-            // if it's large enough
-            // TODO: Accumulate missing deltas
-            if (startDelta.magnitude > dragActivationDistance)
+            // if the drag is large enough, or we're multitouch (pinching)
+            if (startDelta.magnitude > dragActivationDistance || pointerPositions.Count > 1)
             {
                 // activate this "yes we did drag" flag
                 didDrag = true;
@@ -145,8 +149,8 @@ public class HyperzoomPointer : HyperzoomInteraction, IBeginDragHandler, IDragHa
             {
                 // calculate final value using pointer multiplier
                 Vector2 rotationDelta = eventData.delta;
-                rotationDelta.x *= pointerMultiplier.x;
-                rotationDelta.y *= pointerMultiplier.y;
+                rotationDelta.x *= rotationMultiplier.x;
+                rotationDelta.y *= rotationMultiplier.y;
                 // invert direction
                 rotationDelta.x *= -1.0f;
                 rotationDelta.y *= -1.0f;
@@ -219,7 +223,10 @@ public class HyperzoomPointer : HyperzoomInteraction, IBeginDragHandler, IDragHa
         float zoomDelta = previousTouchDeltaMagnitude - currentTouchDeltaMagnitude;
 
         // apply speed dampener
-        zoomDelta *= pointerMultiplier.z;
+        zoomDelta *= pinchMultiplier;
+
+        // pinch speed is different depending on direction
+        if (zoomDelta > 0) zoomDelta *= 0.75f;
 
         // send out pinch event
         //DidPinch(delta);

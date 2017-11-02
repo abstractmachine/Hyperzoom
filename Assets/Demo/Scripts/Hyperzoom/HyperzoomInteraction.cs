@@ -7,7 +7,7 @@ public class HyperzoomInteraction : MonoBehaviour
     #region Properties
 
     /// <summary>
-    /// The Camera attached to the gameObject using the Focus script
+    /// The Camera attached to the gameObject using the Target script
     /// </summary>
     //private Camera currentCamera = null;
 
@@ -17,19 +17,19 @@ public class HyperzoomInteraction : MonoBehaviour
     #region Subclassed Events
 
     /// <summary>
-    /// Whenever we've clicked on a focusable GameObject, fire this event
+    /// Whenever we've clicked on a targetable GameObject, fire this event
     /// </summary>
-    public static event Action<GameObject> DidChangeFocus;
+    public static event Action<GameObject> DidChangeTarget;
 
     /// <summary>
     /// This relays events from Interaction subclasses
-    /// Whenever we've clicked on a focusable GameObject, fire this event
+    /// Whenever we've clicked on a targetable GameObject, fire this event
     /// </summary>
-    /// <param name="newFocusObject">New focus object.</param>
-    protected virtual void ChangedFocus(GameObject newFocusObject)
+    /// <param name="newTargetObject">New target object.</param>
+    protected virtual void ChangedTarget(GameObject newTargetObject)
     {
-        Action<GameObject> handler = DidChangeFocus;
-        if (handler != null) handler(newFocusObject);
+        Action<GameObject> handler = DidChangeTarget;
+        if (handler != null) handler(newTargetObject);
     }
 
     /// <summary>
@@ -41,12 +41,12 @@ public class HyperzoomInteraction : MonoBehaviour
     /// This relays events from Interaction subclasses
     /// Whenever we click & drag, send out this event
     /// </summary>
-    /// <param name="focusedObject">The GameObject we rotated around.</param>
+    /// <param name="targetedObject">The GameObject we rotated around.</param>
     /// <param name="delta">The values of the delta rotation.</param>
-    protected virtual void Rotated(GameObject focusedObject, Vector3 delta)
+    protected virtual void Rotated(GameObject targetedObject, Vector3 delta)
     {
         Action<GameObject, Vector3> handler = DidRotate;
-        if (handler != null) handler(focusedObject, delta);
+        if (handler != null) handler(targetedObject, delta);
     }
 
     /// <summary>
@@ -117,34 +117,34 @@ public class HyperzoomInteraction : MonoBehaviour
     /////////////////////////////////////////
     /// 
     /// <summary>
-    /// buttons have fired SelectNextFocus event
+    /// buttons have fired SelectNextTarget event
     /// </summary>
-    public static event Action<bool> DidSelectNextFocus;
+    public static event Action<bool> DidSelectNextTarget;
 
     /// <summary>
     /// This relays events from Interaction subclasses
-    /// A specified "DidSelectNextFocus" event, usually fired from a button press
+    /// A specified "DidSelectNextTarget" event, usually fired from a button press
     /// </summary>
     /// <param name="didSelect">A useless flag.</param>
-    protected virtual void SelectedNextFocus(bool didSelect = true)
+    protected virtual void SelectedNextTarget(bool didSelect = true)
     {
-        Action<bool> handler = DidSelectNextFocus;
+        Action<bool> handler = DidSelectNextTarget;
         if (handler != null) handler(didSelect);
     }
 
     /// <summary>
-    /// buttons have fired SelectPreviousFocus event
+    /// buttons have fired SelectPreviousTarget event
     /// </summary>
-    public static event Action<bool> DidSelectPreviousFocus;
+    public static event Action<bool> DidSelectPreviousTarget;
 
     /// <summary>
     /// This relays events from Interaction subclasses
-    /// A specified "DidSelectPreviousFocus" event, usually fired from a button press
+    /// A specified "DidSelectPreviousTarget" event, usually fired from a button press
     /// </summary>
     /// <param name="didSelect">A useless flag.</param>
-    protected virtual void SelectedPreviousFocus(bool didSelect =true)
+    protected virtual void SelectedPreviousTarget(bool didSelect =true)
     {
-        Action<bool> handler = DidSelectPreviousFocus;
+        Action<bool> handler = DidSelectPreviousTarget;
         if (handler != null) handler(didSelect);
     }
 
@@ -154,7 +154,7 @@ public class HyperzoomInteraction : MonoBehaviour
     #region Click
 
     /// <summary>
-    /// if is triggered, this is not a focus-able object
+    /// if is triggered, this is not a target-able object
     /// </summary>
 
     public virtual void PointerClicked()

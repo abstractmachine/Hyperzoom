@@ -1,4 +1,6 @@
-﻿public class Zoomable : HyperzoomPointer
+﻿using UnityEngine;
+
+public class Zoomable : HyperzoomPointer
 {
     #region Click
 
@@ -12,7 +14,7 @@
         if (!didDrag && !didZoom /* && !didHold */)
         {
             // send the new target object
-            ChangedFocus(this.gameObject);
+            ChangedTarget(this.gameObject);
         }
     }
 

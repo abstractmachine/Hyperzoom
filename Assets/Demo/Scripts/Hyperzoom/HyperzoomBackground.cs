@@ -12,7 +12,7 @@
         if (!didDrag && !didZoom && !didHold)
         {
             // send null as the new target object
-            ChangedFocus(null);
+            ChangedTarget(null);
         }
     }
 

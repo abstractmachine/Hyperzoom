@@ -51,7 +51,7 @@ public class HyperzoomJoystick : HyperzoomInteraction
         if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.JoystickButton8))
         {
             // send event
-            if (!shoulderButtons.left) SelectedPreviousFocus();
+            if (!shoulderButtons.left) SelectedPreviousTarget();
             // turn on current state
             shoulderButtons.left = true;
         }
@@ -64,7 +64,7 @@ public class HyperzoomJoystick : HyperzoomInteraction
         if (Input.GetKey(KeyCode.JoystickButton7) || Input.GetKey(KeyCode.JoystickButton9))
         {
             // send event
-            if (!shoulderButtons.right) SelectedNextFocus();
+            if (!shoulderButtons.right) SelectedNextTarget();
             // turn on current state
             shoulderButtons.right = true;
         }
@@ -123,7 +123,7 @@ public class HyperzoomJoystick : HyperzoomInteraction
             {   // remember for next time
                 leftJoypad.left = true;
                 // Select Previous
-                SelectedPreviousFocus();
+                SelectedPreviousTarget();
             }
         } // make sure we've crossed a threhold
         else if (leftStickValue.x > -0.5f && dPad.x > -0.5f)
@@ -139,7 +139,7 @@ public class HyperzoomJoystick : HyperzoomInteraction
             {   // remember for next time
                 leftJoypad.right = true;
                 // Select next
-                SelectedNextFocus();
+                SelectedNextTarget();
             }
         } // make sure we've crossed a threshold
         else if (leftStickValue.x < 0.5f && dPad.x < 0.5f)
