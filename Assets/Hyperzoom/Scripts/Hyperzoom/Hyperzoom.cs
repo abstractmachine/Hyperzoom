@@ -11,9 +11,11 @@ public class Hyperzoom : HyperzoomManagement
     /// <summary>
     /// Reference to a transform when nothing is selected
     /// </summary>
-    [Tooltip("Reference to a transform when nothing is selected")]
+    [Tooltip("What should we look at when nothing is selected?")]
     [SerializeField]
     private GameObject unselectedTarget;
+
+    [Header("Virtual Cameras")]
 
     /// <summary>
     /// Reference to our cinemachine free-look script on the virtual camera
@@ -27,7 +29,7 @@ public class Hyperzoom : HyperzoomManagement
     /// </summary>
     [Tooltip("Reference to the cinemachine virtual camera that is active when no object is selected")]
     [SerializeField]
-    private CinemachineFreeLook unselectedCamera;
+    private CinemachineVirtualCameraBase unselectedCamera;
 
     [Header("Zoom")]
 
@@ -181,6 +183,9 @@ public class Hyperzoom : HyperzoomManagement
 
         TargetInit();
 
+        // make sure we don't have any damping
+        AbortFreeLookDamping();
+
         // find out if we're orthographic from the Cinemachine brain
         CinemachineBrain brain = CinemachineCore.Instance.FindPotentialTargetBrain(freeLookCamera);
         isOrthographic = (brain != null) ? brain.OutputCamera.orthographic : false;
@@ -224,6 +229,9 @@ public class Hyperzoom : HyperzoomManagement
 
         // if we're damping, turn it off (creates ugly behavior while rotating)
         if (freeLookIsDamping) AbortFreeLookDamping();
+
+        // try to force the virtual camera focus to free-look
+        IncreaseFreeLookPriority();
 
         // if there is a co-routine running, stop it
         CancelResetPerspective();
@@ -282,6 +290,9 @@ public class Hyperzoom : HyperzoomManagement
         // if we're snapping, it's the end of the scene. Stop all incoming processes
         if (zoomIsSnapping) return;
 
+        // try to force the virtual camera focus to free-look
+        IncreaseFreeLookPriority();
+
         float zoomMultiplier = (100.0f / (zoomMaximum - zoomMinimum)) * 0.1f;
 
         delta *= zoomMultiplier;
@@ -329,6 +340,10 @@ public class Hyperzoom : HyperzoomManagement
     {
         // if we're snapping, it's the end of the scene. Stop all incoming processes
         if (zoomIsSnapping) return;
+
+        // try to force the virtual camera focus to free-look
+        IncreaseFreeLookPriority();
+
         // turn off any snapping to original perspective
         CancelResetPerspective();
 
@@ -346,6 +361,10 @@ public class Hyperzoom : HyperzoomManagement
     {
         // if we're snapping, it's the end of the scene. Stop all incoming processes
         if (zoomIsSnapping) return;
+
+        // make sure we have the virtual camera focus
+        IncreaseFreeLookPriority();
+
         // turn off any snapping to original perspective
         CancelResetPerspective();
 
@@ -766,9 +785,10 @@ public class Hyperzoom : HyperzoomManagement
         // memorize GameObjects (for targetting)
         MemorizeTargets();
 
-        // if there is no assigned target and only one possible target, force this to the target
+        // if there is no assigned target and only one possible target
         if (target == null && zoomableTargets.Count == 1)
         {
+            // force target to the first and only target
             target = zoomableTargets[0];
         }
     }
@@ -812,7 +832,11 @@ public class Hyperzoom : HyperzoomManagement
         // set cinemachine to target this object as well
         SetFreeLookTarget(target.transform);
 
+        // make sure the unselected camera is deselected
+        IncreaseFreeLookPriority();
+
     }
+    // ChangeTaretToNewObject
 
 
     /// <summary>
@@ -823,18 +847,19 @@ public class Hyperzoom : HyperzoomManagement
         // go back to original position
         ResetPerspective();
 
-        // if we were previously targeted on an object and there is more than one target
+        // if there is more than one target
         if (zoomableTargets.Count > 1)
         {
             // stop this selection
             target = null;
+            // set cinemachine to null target
+            SetFreeLookTarget(unselectedTarget.transform);
+            // if there is an "unselected" camera, switch to it
+            DecreaseFreeLookPriority();
         }
 
-        // set cinemachine to null target
-        SetFreeLookTarget(unselectedTarget.transform);
-
-        return;
     }
+    // ChangeTargetToNull
 
 
     /// <summary>
@@ -879,7 +904,7 @@ public class Hyperzoom : HyperzoomManagement
         // turn on flag
         freeLookIsDamping = true;
         // set this damping value
-        SetSetFreeLookDampingComponents(2.5f);
+        SetSetFreeLookDampingComponents(1.5f);
         // wait for the next frame
         yield return new WaitForSeconds(2.0f);
         // turn off damping
@@ -899,9 +924,9 @@ public class Hyperzoom : HyperzoomManagement
             // get the component of the rig that deals with tracking damping
             CinemachineOrbitalTransposer orbitalTransposer = rig.GetCinemachineComponent<CinemachineOrbitalTransposer>();
             // set the dampening
-            orbitalTransposer.m_XDamping = value;
-            orbitalTransposer.m_YDamping = value;
-            orbitalTransposer.m_ZDamping = value;
+            orbitalTransposer.m_XDamping = value * 0.5f;
+            orbitalTransposer.m_YDamping = value * 0.5f;
+            orbitalTransposer.m_ZDamping = value * 0.5f;
             // get the component of the rig that deals with targetting damping
             CinemachineComposer composer = rig.GetCinemachineComponent<CinemachineComposer>();
             // set the damping
@@ -1001,6 +1026,30 @@ public class Hyperzoom : HyperzoomManagement
 
         // we've changed target state, so show currently available targetting options
         TurnOnXray();
+    }
+
+    #endregion
+
+
+    #region Virtual Cameras
+
+    void DecreaseFreeLookPriority()
+    {
+        // make sure there is a null target and there is an unselected camera
+        if (target == null && unselectedCamera != null)
+        {
+            freeLookCamera.Priority = 0;
+        }
+    }
+
+
+    void IncreaseFreeLookPriority()
+    {
+        // make sure there is a target currently selected and there is an unselected camera
+        if (target != null && unselectedCamera != null)
+        {
+            freeLookCamera.Priority = 10;
+        }
     }
 
     #endregion

@@ -94,7 +94,7 @@ MonoBehaviour:
   xrayBackground: {r: 0.33333334, g: 0.33333334, b: 0.33333334, a: 1}
   inputPrefab: {fileID: 1766069381715118, guid: bb92f96f4eb394277b6549423e27520b,
     type: 2}
-  unselectedTarget: {fileID: 0}
+  unselectedTarget: {fileID: 1591951882352534}
   freeLookCamera: {fileID: 0}
   unselectedCamera: {fileID: 0}
   zoomMinimum: 2

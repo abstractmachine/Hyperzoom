@@ -23,7 +23,7 @@ namespace Cinemachine
     /// there is nothing that prevents a virtual camera from controlling multiple
     /// Unity cameras simultaneously.
     /// </summary>
-    [SaveDuringPlay]
+    //[SaveDuringPlay]
     public abstract class CinemachineVirtualCameraBase : MonoBehaviour, ICinemachineCamera
     {
         /// <summary>This is deprecated.  It is here to support the soon-to-be-removed

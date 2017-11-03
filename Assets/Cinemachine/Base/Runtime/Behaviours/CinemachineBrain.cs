@@ -23,7 +23,7 @@ namespace Cinemachine
     [DocumentationSorting(0, DocumentationSortingAttribute.Level.UserRef)]
     [RequireComponent(typeof(Camera)), ExecuteInEditMode, DisallowMultipleComponent]
     [AddComponentMenu("Cinemachine/CinemachineBrain")]
-    [SaveDuringPlay]
+    //[SaveDuringPlay]
     public class CinemachineBrain : MonoBehaviour
     {
         /// <summary>
