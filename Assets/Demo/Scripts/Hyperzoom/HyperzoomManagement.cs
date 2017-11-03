@@ -14,6 +14,15 @@ public class HyperzoomManagement : MonoBehaviour
 
     #region Public Properties
 
+    [Header("X-Ray")]
+
+    /// <summary>
+    /// The background color used for x-ray mode
+    /// </summary>
+    [Tooltip("The background color used for x-ray mode")]
+    [SerializeField]
+    private Color xrayBackground = Color.gray;
+
     [Header("References")]
 
     /// <summary>
@@ -29,6 +38,9 @@ public class HyperzoomManagement : MonoBehaviour
     #region Properties
 
     protected bool managerIsPresent = false;
+
+    protected Camera currentCamera = null;
+    protected Color backgroundColor = Color.gray;
 
     /// <summary>
     /// The list of all targets that can be renderered "Focusable"
@@ -65,11 +77,10 @@ public class HyperzoomManagement : MonoBehaviour
         //// check to see if there is a Manager
         //if (GameObject.FindObjectOfType<FungusSceneManager>() != null)
         //{
-        //    managerIsPresent = true;
+            managerIsPresent = true;
         //}
 
         // get a reference to this scene's camera
-        Camera currentCamera = null;
         foreach (Camera camera in Camera.allCameras)
         {
             if (camera.scene != this.gameObject.scene)
@@ -85,7 +96,9 @@ public class HyperzoomManagement : MonoBehaviour
             currentCamera = Camera.main;
         }
 
-        SendBackgroundColor(currentCamera.backgroundColor);
+        // memorize the background color
+        backgroundColor = currentCamera.backgroundColor;
+        SendBackgroundColor(backgroundColor);
 
         // if the manager is present
         if (managerIsPresent)
@@ -188,6 +201,11 @@ public class HyperzoomManagement : MonoBehaviour
 
     #region Backgroud
 
+    /// <summary>
+    /// Send out an event that the background color changed
+    /// </summary>
+    /// <param name="color">Color.</param>
+
     protected void SendBackgroundColor(Color color)
     {
         if (BackgroundColorChanged != null)
@@ -196,6 +214,22 @@ public class HyperzoomManagement : MonoBehaviour
         }
 
     } // SendBackgroundColor
+
+
+    /// <summary>
+    /// Mix the background color to/from the xray background color
+    /// </summary>
+    /// <param name="time">The current mix.</param>
+
+    protected void SetBackgroundXrayColor(float time)
+    {
+        // create a temporary color
+        Color newColor = Color.Lerp(backgroundColor, xrayBackground, time);
+        // apply new color
+        currentCamera.backgroundColor = newColor;
+        // send out "background color changed" event
+        SendBackgroundColor(newColor);
+    }
 
     #endregion
 

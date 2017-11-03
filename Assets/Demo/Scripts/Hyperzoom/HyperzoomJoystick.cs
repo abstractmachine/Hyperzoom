@@ -22,7 +22,7 @@ public class HyperzoomJoystick : HyperzoomInteraction
     public float stickDeadZone = 0.005f;
 
     private Vector2 leftStickValue = Vector2.zero;
-    //private Vector2 rightStickValue = Vector2.zero;
+    private Vector2 rightStickValue = Vector2.zero;
 
     private Joypad leftJoypad = new Joypad();
     private Joypad shoulderButtons = new Joypad();
@@ -153,7 +153,7 @@ public class HyperzoomJoystick : HyperzoomInteraction
     void UpdateZoom()
     {
         // the left stick value
-        leftStickValue = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        leftStickValue = new Vector2(-Input.GetAxis("Horizontal"), -Input.GetAxis("Vertical"));
 
         // if pushing all the way to down and not previously pushing down && the others are
         if (Mathf.Abs(leftStickValue.y) > stickDeadZone)
@@ -201,29 +201,29 @@ public class HyperzoomJoystick : HyperzoomInteraction
 
     void UpdateRotate()
     {
-        //Vector2 delta = Vector2.zero;
+        Vector2 delta = Vector2.zero;
 
-        //// the right analog joysticks
-        //rightStickValue = new Vector2(Input.GetAxis("Horizontal-Right"), Input.GetAxis("Vertical-Right"));
+        // the right analog joysticks
+        rightStickValue = new Vector2(-Input.GetAxis("Horizontal-Right"), Input.GetAxis("Vertical-Right"));
 
-        //// if rotatation with left joystick around horizontal axis
-        //if (Mathf.Abs(rightStickValue.x) > stickDeadZone)
-        //{
-        //    // get current joystick axis value
-        //    delta.x = rightStickValue.x * horizontalRotationSpeedController;
-        //    // make sure there are listeners listening
-        //        // send DidRotate event with the delta change value
-        //        Rotated(null, delta);
-        //}
+        // if rotatation with left joystick around horizontal axis
+        if (Mathf.Abs(rightStickValue.x) > stickDeadZone)
+        {
+            // get current joystick axis value
+            delta.x = rightStickValue.x * horizontalRotationSpeedController;
+            // make sure there are listeners listening
+                // send DidRotate event with the delta change value
+                Rotated(null, delta);
+        }
 
-        //// if rotatation with left joystick around horizontal axis
-        //if (Mathf.Abs(rightStickValue.y) > stickDeadZone)
-        //{
-        //    // get current joystick axis value
-        //    delta.y = rightStickValue.y * verticalRotationSpeedController;
-        //        // send DidRotate event with the delta change value
-        //        Rotated(null, delta);
-        //}
+        // if rotatation with left joystick around horizontal axis
+        if (Mathf.Abs(rightStickValue.y) > stickDeadZone)
+        {
+            // get current joystick axis value
+            delta.y = rightStickValue.y * verticalRotationSpeedController;
+                // send DidRotate event with the delta change value
+                Rotated(null, delta);
+        }
 
     } // UpdateRotate()
 

@@ -91,16 +91,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e535eedcb1cf446b3a5f68598fc5869b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xrayBackground: {r: 0.7529412, g: 0.7529412, b: 0.7529412, a: 0}
   inputPrefab: {fileID: 1766069381715118, guid: bb92f96f4eb394277b6549423e27520b,
     type: 2}
   freeLookCamera: {fileID: 0}
   birdsEyeViewCamera: {fileID: 0}
-  zoomMinimum: 0
+  zoomMinimum: 0.1
   zoomStart: 7
   zoomMaximum: 20
   zoomSpeed: 0.5
-  xrayDuration: 2
-  targetCurve:
+  targetedCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
@@ -136,7 +136,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  focusableCurve:
+  zoomableCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
@@ -166,7 +166,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  unfocusableCurve:
+  unzoomableCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
@@ -196,3 +196,4 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  target: {fileID: 0}

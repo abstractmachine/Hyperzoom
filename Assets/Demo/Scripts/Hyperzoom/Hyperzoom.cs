@@ -9,6 +9,13 @@ public class Hyperzoom : HyperzoomManagement
     #region Serialized Properties 
 
     /// <summary>
+    /// Reference to a transform when nothing is selected
+    /// </summary>
+    [Tooltip("Reference to a transform when nothing is selected")]
+    [SerializeField]
+    private GameObject unselectedTarget;
+
+    /// <summary>
     /// Reference to our cinemachine free-look script on the virtual camera
     /// </summary>
     [Tooltip("Reference to the cinemachine free-look virtual camera")]
@@ -794,6 +801,10 @@ public class Hyperzoom : HyperzoomManagement
 
         // remember target
         target = newTarget;
+
+        // set cinemachine to target this object as well
+        SetFreeLookTarget(target.transform);
+
     }
 
 
@@ -812,7 +823,17 @@ public class Hyperzoom : HyperzoomManagement
             target = null;
         }
 
+        // set cinemachine to null target
+        SetFreeLookTarget(unselectedTarget.transform);
+
         return;
+    }
+
+
+    void SetFreeLookTarget(Transform targetTransform)
+    {
+        freeLookCamera.m_Follow = targetTransform;
+        freeLookCamera.m_LookAt = targetTransform;
     }
 
 
@@ -831,8 +852,12 @@ public class Hyperzoom : HyperzoomManagement
             currentIndex = zoomableTargets.IndexOf(target);
         }
 
+        if (zoomableTargets.Count == 1)
+        {
+            currentIndex = 0;
+        }
         // wrap around
-        if (currentIndex == -1 || (zoomableTargets.Count == 1 || currentIndex <= 0))
+        else if (currentIndex < 0)
         {
             currentIndex = zoomableTargets.Count - 1;
         }
@@ -842,22 +867,8 @@ public class Hyperzoom : HyperzoomManagement
             currentIndex -= 1;
         }
 
-        // if we're null
-        if (currentIndex == -1)
-        {
-            // turn off targetting
-            target = null;
-            // reset perspective to original position
-            ResetPerspective();
-        }
-        else
-        {
-            // set the target
-            target = zoomableTargets[currentIndex];
-        }
-
-        // we've changed target state, so show currently available targetting options
-        TurnOnXray();
+        // apply changes
+        SelectTarget(currentIndex);
     }
 
 
@@ -875,18 +886,14 @@ public class Hyperzoom : HyperzoomManagement
             currentIndex = zoomableTargets.IndexOf(target);
         }
         // wrap around
-        if (currentIndex >= zoomableTargets.Count - 1)
+        if (zoomableTargets.Count == 1) 
         {
-            // only select null (-1) if there is more than one target
-            if (zoomableTargets.Count > 1)
-            {
-                // set to null
-                currentIndex = -1;
-            }
-            else
-            {
-                currentIndex = 0;
-            }
+            currentIndex = 0;
+        }
+        else if (currentIndex >= zoomableTargets.Count - 1)
+        {
+            // set to null
+            currentIndex = -1;
         }
         else // otherwise
         {
@@ -894,17 +901,28 @@ public class Hyperzoom : HyperzoomManagement
             currentIndex += 1;
         }
 
+        // apply changes
+        SelectTarget(currentIndex);
+    }
+
+
+    void SelectTarget(int targetIndex)
+    {
         // if we're null
-        if (currentIndex == -1)
+        if (targetIndex == -1)
         {
             target = null;
             // reset perspective to original position
             ResetPerspective();
+            // set cinemachine to null target
+            SetFreeLookTarget(unselectedTarget.transform);
         }
         else
         {
             // set the target using the index
-            target = zoomableTargets[currentIndex];
+            target = zoomableTargets[targetIndex];
+            // set cinemachine to null target
+            SetFreeLookTarget(target.transform);
         }
 
         // we've changed target state, so show currently available targetting options
@@ -1061,6 +1079,10 @@ public class Hyperzoom : HyperzoomManagement
 
         // apply these changes
         ApplyRendererOpacities();
+
+        // change the background
+        float backgroundLerpValue = 1.0f - xrayOpacityValue;
+        SetBackgroundXrayColor(backgroundLerpValue);
 
         // calculate if we've reached the opacity goal
         if (xrayState == false && Mathf.Approximately(xrayOpacityValue, 1.0f))
