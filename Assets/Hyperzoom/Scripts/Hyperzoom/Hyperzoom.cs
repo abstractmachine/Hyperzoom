@@ -94,13 +94,19 @@ public class Hyperzoom : HyperzoomManagement
     #endregion
 
 
-    #region Private Properties
+    #region Coroutine Properties
 
     /// <summary>
     /// A coroutine that stops the previous rotation events if no new events
     /// come in after one frame. Used to control Cinemachine's Free-Look system.
     /// </summary>
     private Coroutine rotationStopRoutine = null;
+
+    /// <summary>
+    /// A coroutine that temporarily turns on dampening on the Free-Look virtual camera,
+    /// then fades out the dampening effect
+    /// </summary>
+    private Coroutine freeLookDampeningRoutine = null;
 
     #endregion
 
@@ -113,6 +119,7 @@ public class Hyperzoom : HyperzoomManagement
     private float zoomFadeMargin = 0.25f;
     private float zoomPointOfNoReturn = 0.5f;
     private bool zoomIsSnapping = false;
+    private bool freeLookIsDamping = false;
     float zoomPointOfNoReturnLow = 0.0f;
     float zoomPointOfNoReturnHigh = 1.0f;
 
@@ -174,7 +181,7 @@ public class Hyperzoom : HyperzoomManagement
 
         TargetInit();
 
-        // find out if we're orthographic
+        // find out if we're orthographic from the Cinemachine brain
         CinemachineBrain brain = CinemachineCore.Instance.FindPotentialTargetBrain(freeLookCamera);
         isOrthographic = (brain != null) ? brain.OutputCamera.orthographic : false;
 
@@ -214,6 +221,9 @@ public class Hyperzoom : HyperzoomManagement
     {
         // if we're snapping, it's the end of the scene. Stop all incoming processes
         if (zoomIsSnapping) return;
+
+        // if we're damping, turn it off (creates ugly behavior while rotating)
+        if (freeLookIsDamping) AbortFreeLookDamping();
 
         // if there is a co-routine running, stop it
         CancelResetPerspective();
@@ -789,12 +799,12 @@ public class Hyperzoom : HyperzoomManagement
         // if the new target is not actually targetable
         if (!zoomableTargets.Contains(newTarget)) return;
 
-        // if we are already targeting this object
-        if (target == newTarget)
-        {
-            // push in on this object
-            //ZoomIn();
-        }
+        //// if we are already targeting this object
+        //if (target == newTarget)
+        //{
+        //    // push in on this object
+        //    ZoomIn();
+        //}
 
         // remember target
         target = newTarget;
@@ -827,10 +837,77 @@ public class Hyperzoom : HyperzoomManagement
     }
 
 
+    /// <summary>
+    /// Set the Free-Look virtual camera to a new target.
+    /// Also, animate the transition with dampening.
+    /// </summary>
+    /// <param name="targetTransform">The new target's transform.</param>
+
     void SetFreeLookTarget(Transform targetTransform)
     {
         freeLookCamera.m_Follow = targetTransform;
         freeLookCamera.m_LookAt = targetTransform;
+        // turn off previous dampening adjustment routine if it exists
+        if (freeLookDampeningRoutine != null) StopCoroutine(freeLookDampeningRoutine);
+        // turn on dampening for a bit
+        freeLookDampeningRoutine = StartCoroutine(SetFreeLookDampening());
+    }
+
+
+    /// <summary>
+    /// Turns the off free look damping.
+    /// </summary>
+
+    void AbortFreeLookDamping()
+    {
+        // turn off previous dampening adjustment routine if it exists
+        if (freeLookDampeningRoutine != null) StopCoroutine(freeLookDampeningRoutine);
+        // turn off damping
+        SetSetFreeLookDampingComponents(0.0f);
+        // turn off flag
+        freeLookIsDamping = false;
+    }
+
+
+    /// <summary>
+    /// Temporarily turns on dampening on the Free-Look camera
+    /// </summary>
+    /// <returns>The free look dampening.</returns>
+
+    IEnumerator SetFreeLookDampening()
+    {
+        // turn on flag
+        freeLookIsDamping = true;
+        // set this damping value
+        SetSetFreeLookDampingComponents(2.5f);
+        // wait for the next frame
+        yield return new WaitForSeconds(2.0f);
+        // turn off damping
+        SetSetFreeLookDampingComponents(0.0f);
+        // all done, turn off flag
+        freeLookIsDamping = false;
+    }
+
+
+    void SetSetFreeLookDampingComponents(float value)
+    {
+        // go through each rig
+        for (int i = 0; i < 3; i++)
+        {
+            // get this rig
+            CinemachineVirtualCamera rig = freeLookCamera.GetRig(i);
+            // get the component of the rig that deals with tracking damping
+            CinemachineOrbitalTransposer orbitalTransposer = rig.GetCinemachineComponent<CinemachineOrbitalTransposer>();
+            // set the dampening
+            orbitalTransposer.m_XDamping = value;
+            orbitalTransposer.m_YDamping = value;
+            orbitalTransposer.m_ZDamping = value;
+            // get the component of the rig that deals with targetting damping
+            CinemachineComposer composer = rig.GetCinemachineComponent<CinemachineComposer>();
+            // set the damping
+            composer.m_HorizontalDamping = value;
+            composer.m_VerticalDamping = value;
+        }
     }
 
 

@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 114124027634670738}
   - component: {fileID: 114258540619552670}
   - component: {fileID: 114191421383095330}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4610735616613192}
   - component: {fileID: 114733281960751816}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: TopRig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54,7 +54,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4894141450942342}
   - component: {fileID: 114145408235473244}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BottomRig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ GameObject:
   - component: {fileID: 114789642060096482}
   - component: {fileID: 114394010550320088}
   - component: {fileID: 114123709467430016}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,8 +88,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4681250951947038}
   - component: {fileID: 114124615791482902}
-  m_Layer: 0
-  m_Name: Free-Look Virtual Camera
+  m_Layer: 2
+  m_Name: Free-Look Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104,7 +104,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4580078481094102}
   - component: {fileID: 114216388471485106}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: MiddleRig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 114966487984111906}
   - component: {fileID: 114841811982209418}
   - component: {fileID: 114991186318375398}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}

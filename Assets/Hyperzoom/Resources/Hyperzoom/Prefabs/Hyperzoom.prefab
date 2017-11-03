@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114025017351328972}
   - component: {fileID: 114684176699283678}
   - component: {fileID: 114462292681423544}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Hyperzoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,13 +94,14 @@ MonoBehaviour:
   xrayBackground: {r: 0.7529412, g: 0.7529412, b: 0.7529412, a: 0}
   inputPrefab: {fileID: 1766069381715118, guid: bb92f96f4eb394277b6549423e27520b,
     type: 2}
+  unselectedTarget: {fileID: 1591951882352534}
   freeLookCamera: {fileID: 0}
   birdsEyeViewCamera: {fileID: 0}
-  zoomMinimum: 0.1
+  zoomMinimum: 1
   zoomStart: 7
   zoomMaximum: 20
   zoomSpeed: 0.5
-  targetedCurve:
+  targetCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
@@ -136,7 +137,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  zoomableCurve:
+  focusableCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
@@ -166,7 +167,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  unzoomableCurve:
+  unfocusableCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2

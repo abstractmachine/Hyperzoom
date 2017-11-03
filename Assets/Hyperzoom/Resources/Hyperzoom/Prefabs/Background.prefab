@@ -85,8 +85,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3564c765f7d94393b7c4b24433d52ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointerMultiplier: {x: 1, y: 1, z: 1}
-  scrollWheelMultiplier: 1
 --- !u!114 &114360000275051504
 MonoBehaviour:
   m_ObjectHideFlags: 1

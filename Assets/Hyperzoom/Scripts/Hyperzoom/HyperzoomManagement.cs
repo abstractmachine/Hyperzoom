@@ -138,7 +138,7 @@ public class HyperzoomManagement : MonoBehaviour
 
             // Instantiate the Input system, with a name
             GameObject go = Instantiate(inputPrefab) as GameObject;
-            go.name = "Input";
+            go.name = "Input EventSystem";
             // make it a child of this GameObject
             go.transform.parent = this.transform;
         }
