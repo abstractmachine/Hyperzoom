@@ -23,11 +23,11 @@ public class Hyperzoom : HyperzoomManagement
     private CinemachineFreeLook freeLookCamera;
 
     /// <summary>
-    /// Reference to the cinemachine bird's-eye view virtual camera when no object is selected
+    /// Reference to the cinemachine virtual camera that is active when no object is selected
     /// </summary>
-    [Tooltip("Reference to the cinemachine bird's-eye view virtual camera when no object is selected")]
+    [Tooltip("Reference to the cinemachine virtual camera that is active when no object is selected")]
     [SerializeField]
-    private CinemachineFreeLook birdsEyeViewCamera;
+    private CinemachineFreeLook unselectedCamera;
 
     [Header("Zoom")]
 
@@ -83,7 +83,7 @@ public class Hyperzoom : HyperzoomManagement
     /// draw the zoom curve for focusable GameObjects (and their children)
     /// </summary>
     [Tooltip("draw the zoom curve for focusable GameObjects (and their children)")]
-    public AnimationCurve focusableCurve = new AnimationCurve(new Keyframe(0.0f, 0.1f), new Keyframe(0.25f, 1.0f), new Keyframe(0.75f, 1.0f), new Keyframe(0.95f, 1.0f));
+    public AnimationCurve focusableCurve = new AnimationCurve(new Keyframe(0.0f, 0.1f), new Keyframe(0.25f, 1.0f), new Keyframe(0.75f, 1.0f), new Keyframe(0.95f, 0.0f));
 
     /// <summary>
     /// draw the zoom curve for unfocusable GameObjects
