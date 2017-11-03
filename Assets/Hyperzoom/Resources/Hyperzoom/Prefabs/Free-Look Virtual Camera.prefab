@@ -135,7 +135,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1793492967728226}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.29349697, y: 0.36271155, z: -0.12151107, w: 0.8760907}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -149,7 +149,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1464034041353490}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.29349697, y: 0.36271155, z: -0.12151107, w: 0.8760907}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -163,8 +163,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1792784890617080}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.9962664, y: 6.3999996, z: -5.9962654}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4610735616613192}
@@ -179,7 +179,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1634217550082012}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.29349697, y: 0.36271155, z: -0.12151107, w: 0.8760907}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -288,14 +288,14 @@ MonoBehaviour:
     FarClipPlane: 5000
     Dutch: 0
   m_XAxis:
-    Value: 0
+    Value: 45
     m_MaxSpeed: 10000
     m_AccelTime: 0
     m_DecelTime: 0
     m_InputAxisName: 
     m_InputAxisValue: 0
   m_YAxis:
-    Value: 0.5
+    Value: 0.7
     m_MaxSpeed: 100
     m_AccelTime: 0
     m_DecelTime: 0
@@ -406,7 +406,7 @@ MonoBehaviour:
   m_DampingStyle: 0
   m_HeadingBias: 0
   m_XAxis:
-    Value: 0
+    Value: 45
     m_MaxSpeed: 10000
     m_AccelTime: 0
     m_DecelTime: 0
@@ -438,7 +438,7 @@ MonoBehaviour:
   m_DampingStyle: 0
   m_HeadingBias: 0
   m_XAxis:
-    Value: 0
+    Value: 45
     m_MaxSpeed: 10000
     m_AccelTime: 0
     m_DecelTime: 0
@@ -507,7 +507,7 @@ MonoBehaviour:
   m_DampingStyle: 0
   m_HeadingBias: 0
   m_XAxis:
-    Value: 0
+    Value: 45
     m_MaxSpeed: 10000
     m_AccelTime: 0
     m_DecelTime: 0

@@ -77,22 +77,19 @@ public class Hyperzoom : HyperzoomManagement
     /// draw the zoom curve for the targeted GameObject (and its children)
     /// </summary>
     [Tooltip("draw the zoom curve for the targeted GameObject (and its children)")]
-    [SerializeField]
-    private AnimationCurve targetedCurve = new AnimationCurve(new Keyframe(0.0f, 0.0f), new Keyframe(0.05f, 0.968f), new Keyframe(0.25f, 1.0f), new Keyframe(0.75f, 1.0f), new Keyframe(0.95f, 0.0f));
+    public AnimationCurve targetCurve = new AnimationCurve(new Keyframe(0.0f, 0.0f), new Keyframe(0.05f, 0.968f), new Keyframe(0.25f, 1.0f), new Keyframe(0.75f, 1.0f), new Keyframe(0.95f, 0.0f));
 
     /// <summary>
-    /// draw the zoom curve for targetable GameObjects (and their children)
+    /// draw the zoom curve for focusable GameObjects (and their children)
     /// </summary>
-    [Tooltip("draw the zoom curve for targetable GameObjects (and their children)")]
-    [SerializeField]
-    private AnimationCurve zoomableCurve = new AnimationCurve(new Keyframe(0.0f, 0.1f), new Keyframe(0.25f, 1.0f), new Keyframe(0.75f, 1.0f), new Keyframe(0.95f, 1.0f));
+    [Tooltip("draw the zoom curve for focusable GameObjects (and their children)")]
+    public AnimationCurve focusableCurve = new AnimationCurve(new Keyframe(0.0f, 0.1f), new Keyframe(0.25f, 1.0f), new Keyframe(0.75f, 1.0f), new Keyframe(0.95f, 1.0f));
 
     /// <summary>
-    /// draw the zoom curve for untargetable GameObjects
+    /// draw the zoom curve for unfocusable GameObjects
     /// </summary>
-    [Tooltip("draw the zoom curve for untargetable GameObjects")]
-    [SerializeField]
-    private AnimationCurve unzoomableCurve = new AnimationCurve(new Keyframe(0.11f, 0.0f), new Keyframe(0.25f, 1.0f), new Keyframe(0.75f, 1.0f), new Keyframe(0.9f, 0.0f));
+    [Tooltip("draw the zoom curve for unfocusable GameObjects")]
+    public AnimationCurve unfocusableCurve = new AnimationCurve(new Keyframe(0.11f, 0.0f), new Keyframe(0.25f, 1.0f), new Keyframe(0.75f, 1.0f), new Keyframe(0.9f, 0.0f));
 
     #endregion
 
@@ -314,7 +311,7 @@ public class Hyperzoom : HyperzoomManagement
             freeLookCamera.m_Lens.FieldOfView = zoomCameraValue;
         }
         // apply these changes
-        //ApplyRendererOpacities();
+        ApplyRendererOpacities();
     }
 
 
@@ -565,13 +562,13 @@ public class Hyperzoom : HyperzoomManagement
     void HideEverything()
     {
         // go through all the zoomed objects
-        foreach (KeyValuePair<GameObject, GameObject> zoomedKeyValuePair in zoomedFaders)
+        foreach (KeyValuePair<GameObject, GameObject> zoomedKeyValuePair in zoomableFaders)
         {
             FadeMaterial(ExtractMaterialsFromFader(zoomedKeyValuePair.Key), 0.0f);
         }
 
         // go through all the unzoomed faders
-        foreach (KeyValuePair<GameObject, GameObject> unzoomedKeyValuePair in unzoomedFaders)
+        foreach (KeyValuePair<GameObject, GameObject> unzoomedKeyValuePair in unzoomableFaders)
         {
             // apply both fading values
             FadeMaterial(ExtractMaterialsFromFader(unzoomedKeyValuePair.Key), 0.0f);
@@ -589,13 +586,13 @@ public class Hyperzoom : HyperzoomManagement
             opacity = Mathf.Clamp01(opacity);
 
             // go through all the zoomed objects
-            foreach (KeyValuePair<GameObject, GameObject> zoomedKeyValuePair in zoomedFaders)
+            foreach (KeyValuePair<GameObject, GameObject> zoomedKeyValuePair in zoomableFaders)
             {
                 FadeMaterial(ExtractMaterialsFromFader(zoomedKeyValuePair.Key), opacity);
             }
 
             // go through all the unzoomed faders
-            foreach (KeyValuePair<GameObject, GameObject> unzoomedKeyValuePair in unzoomedFaders)
+            foreach (KeyValuePair<GameObject, GameObject> unzoomedKeyValuePair in unzoomableFaders)
             {
                 // apply both fading values
                 FadeMaterial(ExtractMaterialsFromFader(unzoomedKeyValuePair.Key), opacity);
@@ -609,55 +606,55 @@ public class Hyperzoom : HyperzoomManagement
 
     void ApplyRendererOpacities()
     {
-        float targetValue = targetedCurve.Evaluate(zoomTargetPct);
-        float zoomedValue = zoomableCurve.Evaluate(zoomTargetPct);
-        float unzoomedValue = unzoomableCurve.Evaluate(zoomTargetPct) * xrayOpacityValue;
+        float targetValue = targetCurve.Evaluate(zoomTargetPct);
+        float focusedValue = focusableCurve.Evaluate(zoomTargetPct);
+        float unfocusedValue = unfocusableCurve.Evaluate(zoomTargetPct) * xrayOpacityValue;
         float opaqueValue = 1.0f * xrayOpacityValue;
 
-        // go through all the zoomed objects
-        foreach (KeyValuePair<GameObject, GameObject> zoomedKeyValuePair in zoomedFaders)
+        // go through all the focused objects
+        foreach (KeyValuePair<GameObject, GameObject> focusedKeyValuePair in zoomableFaders)
         {
-            GameObject childObject = zoomedKeyValuePair.Key;
+            GameObject childObject = focusedKeyValuePair.Key;
             Material[] childMaterials = ExtractMaterialsFromFader(childObject);
-            GameObject parentObject = zoomedKeyValuePair.Value;
+            GameObject parentObject = focusedKeyValuePair.Value;
 
             // if there is no target && the xray is not on && we're at the zoom-in point
             if (target == null && !xrayState && zoomTargetPct < zoomFadeMargin)
             {
                 FadeMaterial(childMaterials, opaqueValue);
             }
-            // if this is the zoomed object, and we're zooming IN
+            // if this is the focused object, and we're zooming IN
             else if (parentObject == target && zoomTargetPct < zoomFadeMargin)
             {
                 //FadeMaterial(renderer.material, 1.0f);
                 FadeMaterial(childMaterials, targetValue);
             }
-            // this is not the zoomed object but we're zooming in
+            // this is not the focused object but we're zooming in
             else if (parentObject != target && zoomTargetPct < zoomFadeMargin)
             {
-                FadeMaterial(childMaterials, unzoomedValue);
+                FadeMaterial(childMaterials, unfocusedValue);
             }
-            // otherwise this is either not the zoomed object or we're not zooming in
+            // otherwise this is either not the focused object or we're not zooming in
             else
             {
-                //FadeMaterial(renderer.material, zoomedOpacity);
-                FadeMaterial(childMaterials, zoomedValue);
+                //FadeMaterial(renderer.material, focusedOpacity);
+                FadeMaterial(childMaterials, focusedValue);
             }
         }
 
-        // go through all the unzoomed faders
-        foreach (KeyValuePair<GameObject, GameObject> unzoomedKeyValuePair in unzoomedFaders)
+        // go through all the unfocused faders
+        foreach (KeyValuePair<GameObject, GameObject> unfocusedKeyValuePair in unzoomableFaders)
         {
-            GameObject childObject = unzoomedKeyValuePair.Key;
+            GameObject childObject = unfocusedKeyValuePair.Key;
             Material[] childMaterials = ExtractMaterialsFromFader(childObject);
             // if there is no target && the xray is not on && we're at the zoom-in point
             if (target == null && !xrayState && zoomTargetPct < zoomFadeMargin)
             {
                 FadeMaterial(childMaterials, opaqueValue);
             }
-            else // there is a target, fade (if necessary) the unzoomed renderer
+            else // there is a target, fade (if necessary) the unfocused renderer
             {
-                FadeMaterial(childMaterials, unzoomedValue);
+                FadeMaterial(childMaterials, unfocusedValue);
             }
         }
 
@@ -843,7 +840,7 @@ public class Hyperzoom : HyperzoomManagement
         if (zoomIsSnapping) return;
 
         // start with an index of none (null)
-        int currentIndex = 0;
+        int currentIndex = -1;
 
         // if there is a current target
         if (target != null)
@@ -886,7 +883,7 @@ public class Hyperzoom : HyperzoomManagement
             currentIndex = zoomableTargets.IndexOf(target);
         }
         // wrap around
-        if (zoomableTargets.Count == 1) 
+        if (zoomableTargets.Count == 1)
         {
             currentIndex = 0;
         }

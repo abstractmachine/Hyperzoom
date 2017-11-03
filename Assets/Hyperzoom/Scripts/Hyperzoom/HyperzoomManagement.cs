@@ -50,12 +50,12 @@ public class HyperzoomManagement : MonoBehaviour
     /// <summary>
     /// The list of focusable renderers, associated with its root parent GameObject
     /// </summary>
-    protected Dictionary<GameObject, GameObject> zoomedFaders = new Dictionary<GameObject, GameObject>();
+    protected Dictionary<GameObject, GameObject> zoomableFaders = new Dictionary<GameObject, GameObject>();
 
     /// <summary>
     /// The list of focusable renderers, associated with its root parent GameObject
     /// </summary>
-    protected Dictionary<GameObject, GameObject> unzoomedFaders = new Dictionary<GameObject, GameObject>();
+    protected Dictionary<GameObject, GameObject> unzoomableFaders = new Dictionary<GameObject, GameObject>();
 
     #endregion
 
@@ -284,10 +284,10 @@ public class HyperzoomManagement : MonoBehaviour
             {
                 GameObject possibleRendererGameObject = possibleRenderer.gameObject;
                 // make sure it isn't already added
-                if (zoomedFaders.TryGetValue(possibleRendererGameObject, out parentObjectTester)) continue;
-                if (unzoomedFaders.TryGetValue(possibleRendererGameObject, out parentObjectTester)) continue;
+                if (zoomableFaders.TryGetValue(possibleRendererGameObject, out parentObjectTester)) continue;
+                if (unzoomableFaders.TryGetValue(possibleRendererGameObject, out parentObjectTester)) continue;
                 // ok, add it to the list of unfocuseable objects
-                unzoomedFaders.Add(possibleRendererGameObject, possibleRenderer.gameObject);
+                unzoomableFaders.Add(possibleRendererGameObject, possibleRenderer.gameObject);
 
             } // if (possibleRenderer.gameObject
 
@@ -302,10 +302,10 @@ public class HyperzoomManagement : MonoBehaviour
             {
                 GameObject possibleRendererGameObject = possibleRenderer.gameObject;
                 // make sure it isn't already added
-                if (zoomedFaders.TryGetValue(possibleRendererGameObject, out parentObjectTester)) continue;
-                if (unzoomedFaders.TryGetValue(possibleRendererGameObject, out parentObjectTester)) continue;
+                if (zoomableFaders.TryGetValue(possibleRendererGameObject, out parentObjectTester)) continue;
+                if (unzoomableFaders.TryGetValue(possibleRendererGameObject, out parentObjectTester)) continue;
                 // ok, add it to the list of unfocuseable objects
-                unzoomedFaders.Add(possibleRendererGameObject, possibleRenderer.gameObject);
+                unzoomableFaders.Add(possibleRendererGameObject, possibleRenderer.gameObject);
 
             } // if (possibleRenderer.gameObject
 
@@ -334,17 +334,17 @@ public class HyperzoomManagement : MonoBehaviour
         // used for testing key-value pairs
         GameObject rootParentObjectTester;
         // if it's in the unfocused list
-        if (unzoomedFaders.TryGetValue(childGameObject, out rootParentObjectTester))
+        if (unzoomableFaders.TryGetValue(childGameObject, out rootParentObjectTester))
         {
             // remove it from this list
-            unzoomedFaders.Remove(childGameObject);
+            unzoomableFaders.Remove(childGameObject);
         }
 
         // make sure it isn't already added to the focused list
-        if (!zoomedFaders.TryGetValue(childGameObject, out rootParentObjectTester))
+        if (!zoomableFaders.TryGetValue(childGameObject, out rootParentObjectTester))
         {
             // add it to the dictionary, along with its root parent GameObject
-            zoomedFaders.Add(childGameObject, rootParentObject);
+            zoomableFaders.Add(childGameObject, rootParentObject);
         }
     }
 
