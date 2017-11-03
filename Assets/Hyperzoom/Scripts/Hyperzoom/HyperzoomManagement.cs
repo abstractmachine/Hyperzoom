@@ -74,11 +74,11 @@ public class HyperzoomManagement : MonoBehaviour
         // memorize Renderers (for fading)
         MemorizeFaders();
 
-        //// check to see if there is a Manager
-        //if (GameObject.FindObjectOfType<FungusSceneManager>() != null)
-        //{
+        // check to see if there is a Manager
+        if (GameObject.FindObjectOfType<FungusSceneManager>() != null)
+        {
             managerIsPresent = true;
-        //}
+        }
 
         // get a reference to this scene's camera
         foreach (Camera camera in Camera.allCameras)
