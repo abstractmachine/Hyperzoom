@@ -150,31 +150,6 @@ public class Hyperzoom : HyperzoomManagement
     #endregion
 
 
-    #region Events
-
-    /// <summary>
-    /// Fires when scene change has started
-    /// </summary>
-    public static event Action<string> ZoomInStarted;
-
-    /// <summary>
-    /// Fires when scene change has finished
-    /// </summary>
-    public static event Action<string> ZoomInFinished;
-
-    /// <summary>
-    /// Fires when scene change has started
-    /// </summary>
-    public static event Action<string> ZoomOutStarted;
-
-    /// <summary>
-    /// Fires when scene change has finished
-    /// </summary>
-    public static event Action<string> ZoomOutFinished;
-
-    #endregion
-
-
     #region Init
 
     override protected void Start()
@@ -466,7 +441,7 @@ public class Hyperzoom : HyperzoomManagement
                 snapTarget = zoomFadeMargin;
             }
             // if we're beyond the point of no return and the manager is present
-            else if (zoomTargetPct <= zoomPointOfNoReturnLow && managerIsPresent)
+            else if (zoomTargetPct <= zoomPointOfNoReturnLow && fungusSceneManager != null)
             {
                 snapTarget = 0.0f;
             }
@@ -485,7 +460,7 @@ public class Hyperzoom : HyperzoomManagement
         {
 
             // if we're beyond the point of no return and the manager is present
-            if (zoomTargetPct >= zoomPointOfNoReturnHigh & managerIsPresent)
+            if (zoomTargetPct >= zoomPointOfNoReturnHigh & fungusSceneManager != null)
             {
                 // force zoom out
                 snapTarget = 1.0f;
@@ -728,7 +703,7 @@ public class Hyperzoom : HyperzoomManagement
 
     void StartSceneChangeForward()
     {
-        if (ZoomInStarted != null)
+        if (fungusSceneManager != null)
         {
             if (target == null)
             {
@@ -736,7 +711,7 @@ public class Hyperzoom : HyperzoomManagement
             }
             else
             {
-                ZoomInStarted(target.name);
+                fungusSceneManager.ZoomInStarted(target.name);
             }
         }
     }
@@ -744,16 +719,16 @@ public class Hyperzoom : HyperzoomManagement
 
     void StartSceneChangeBackward()
     {
-        if (ZoomOutStarted != null)
+        if (fungusSceneManager != null)
         {
-            ZoomOutStarted(null);
+            fungusSceneManager.ZoomOutStarted(null);
         }
     }
 
 
     void FinishSceneChangeForward()
     {
-        if (ZoomInFinished != null)
+        if (fungusSceneManager != null)
         {
             if (target == null)
             {
@@ -761,7 +736,7 @@ public class Hyperzoom : HyperzoomManagement
             }
             else
             {
-                ZoomInFinished(target.name);
+                fungusSceneManager.ZoomInFinished(target.name);
             }
         }
     }
@@ -769,9 +744,9 @@ public class Hyperzoom : HyperzoomManagement
 
     void FinishSceneChangeBackward()
     {
-        if (ZoomOutFinished != null)
+        if (fungusSceneManager != null)
         {
-            ZoomOutFinished(null);
+            fungusSceneManager.ZoomOutFinished(null);
         }
     }
 

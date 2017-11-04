@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+using Fungus;
+
 public class HyperzoomManagement : MonoBehaviour
 {
-    #region Actions
-
-    public static event Action<Color> BackgroundColorChanged;
-
-    #endregion
-
 
     #region Public Properties
 
@@ -37,7 +33,10 @@ public class HyperzoomManagement : MonoBehaviour
 
     #region Properties
 
-    protected bool managerIsPresent = false;
+    /// <summary>
+    /// Reference access to the FungusSceneManager
+    /// </summary>
+    protected FungusSceneManager fungusSceneManager = null;
 
     protected Camera currentCamera = null;
     protected Color backgroundColor = Color.gray;
@@ -75,10 +74,7 @@ public class HyperzoomManagement : MonoBehaviour
         MemorizeFaders();
 
         // check to see if there is a Manager
-        if (GameObject.FindObjectOfType<FungusSceneManager>() != null)
-        {
-            managerIsPresent = true;
-        }
+        fungusSceneManager = GameObject.FindObjectOfType<FungusSceneManager>();
 
         // get a reference to this scene's camera
         foreach (Camera camera in Camera.allCameras)
@@ -101,7 +97,7 @@ public class HyperzoomManagement : MonoBehaviour
         SendBackgroundColor(backgroundColor);
 
         // if the manager is present
-        if (managerIsPresent)
+        if (fungusSceneManager != null)
         {
             // clean up everything in that case
             DisableAudioListeners();
@@ -208,11 +204,10 @@ public class HyperzoomManagement : MonoBehaviour
 
     protected void SendBackgroundColor(Color color)
     {
-        if (BackgroundColorChanged != null)
+        if (fungusSceneManager != null)
         {
-            BackgroundColorChanged(color);
+            fungusSceneManager.BackgroundColorChanged(color);
         }
-
     } // SendBackgroundColor
 
 
