@@ -8,30 +8,39 @@ Install
 ======
 1. Create a new (3D) Unity project
 2. Download the [latest FungusManager release](https://github.com/abstractmachine/FungusManager/releases/latest)
+	- This package includes its own Fungus folder, compatible with this release
+	- If necessary, you should be able to replace this Fungus folder with a more recent update
 3. Open the FungusManager package to import all the files into your Unity project
 4. Download the [latest Hyperzoom release](https://github.com/abstractmachine/Hyperzoom/releases/latest)
 5. Open the Hyperzoom package to import all the files into your Unity project.
-6. Create a new folder named `Scenes` in your project
-7. Open SceneManager window via menu item `Tools > FungusManager > Scene Manager Window`
-8. Attach SceneManager to the Unity interface
-9. Click `Create 'SceneManager'` button. Point the file explorer to the `Scenes` folder created in step #6. This will create a `SceneManager.scene` in this folder
-10. Verify that the `Add Hyperzoom` button exists in the `SceneManager` window:
+
+New Project
+======
+These instructions describe how to create a basic project managed by the `Scene Manager`.
+
+1. Create a new folder named `Scenes` in your project
+2. Open SceneManager window via menu item `Tools > FungusManager > Scene Manager Window`
+3. Attach SceneManager to the Unity interface
+4. Click `Create 'SceneManager'` button. Point the file explorer to the `Scenes` folder created in step #1. This will create a `SceneManager.scene` in this folder
+5. Verify that the `Add Hyperzoom` button exists in the `SceneManager` window:
 	- You should see a toggle button marked `Add Hyperzoom`. It should be right below `Create New Scene`
-	- If you do not see a `Add Hyperzoom` button, you have not imported correctly via steps #4 & #5
-11. Activate the `Add Hyperzoom` button
-12. Create a new scene named `Start` via the `Create New Scene` button. You can use the same folder from step #9
-13. In the `Hierarchy` window, open the `Flowcharts` Game Object triangle and select `SceneManagement`
-14. Inside the `SceneManagement`'s `Inspector` window, push the `Open Flowchart Window` button
-15. Drag this `Flowchart` window's tab to attach it to the Unity interface
-16. Select the `<Game Started>` block with the label `Start`
-17. Inside the Inspector, press the `+` button to add a new command `SceneManager > Request Scene`
-18. Select the new `Request Scene` command
-19. Under the `Scene Name` field, enter the name `Start`. Avoid adding extraneous invisible spaces in this name
-20. In the `Scene Manager` window, press the `CLOSE` button next to the scene name `Start` under `Current Scenes`
-21. Press the `Play` button in Unity and verify that the `SceneManager` successfully loads your scene
+	- If you do not see a `Add Hyperzoom` button, you have not installed Hyperzoom & Fungus Scene Manager correctly
+6. Activate the `Add Hyperzoom` button
+7. Create a new scene named `Start` via the `Create New Scene` button. You can use the same folder from step #1
+8. In the `Hierarchy` window, open the `Flowcharts` Game Object triangle and select `SceneManagement`
+9. Inside the `SceneManagement`'s `Inspector` window, push the `Open Flowchart Window` button
+10. Drag this `Flowchart` window's tab to attach it to the Unity interface
+11. Select the `<Game Started>` block with the label `Start`
+12. Inside the Inspector, press the `+` button to add a new command `SceneManager > Request Scene`
+13. Select the new `Request Scene` command
+14. Under the `Scene Name` field, enter the name `Start`. Avoid adding extraneous invisible spaces in this name
+15. In the `Scene Manager` window, press the `CLOSE` button next to the scene name `Start` under `Current Scenes`
+16. Press the `Play` button in Unity and verify that the `SceneManager` successfully loads the `Start` scene
 
 Zoomable Objects
 ======
+These instructions describe how to create a new Zoomable Object in your project.
+
 1. If it is not already loaded, press the `Load 'SceneManager'` button in the `Scene Manager` window
 2. Open the `Start` scene via the `LOAD` button in the `SceneManager` window
 3. In the `Start` scene, add a 3D cube in the `Hierarchy` window via `Create > 3D Object > Cube`
@@ -54,11 +63,11 @@ Zoomable Objects
 	- In the `Object Name` field, enter the text `TestCube` exactly as in step #4
 	- In the `Commands` list below, press the `+` button to add a new command `SceneManager > Request Scene`
 	- Select this command. Under `Scene Name` enter `Demo`
-8. Save the `Start` scene
-9. Close the `Start` scene via the `Scene Manager` window
-10. Create a new scene in the `Scene Manager` window. Name this scene `Demo`
+9. Save the `Start` scene
+10. Close the `Start` scene via the `Scene Manager` window
+11. Create a new scene in the `Scene Manager` window. Name this scene `Demo`
 	- This is the scene that your game will switch to. Try changing the background color to make it more obvious that you have changed scenes. Also note the scene names in the `Hierarchy` window
-11. Press play to test this scene transition by zooming into the object `TestCube`
+12. Press play to test this scene transition by zooming into the object `TestCube`
 
 Fungus
 ======
