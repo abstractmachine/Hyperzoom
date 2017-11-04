@@ -80,5 +80,5 @@ This project was created by Douglas Edric Stanley (http://www.abstractmachine.ne
 
 License
 =======
-This template uses the same license (MIT License) as Fungus.
+This code is not yet licensed for use outside of the project `A Crossing Industry`.
 
