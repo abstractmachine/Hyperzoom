@@ -182,8 +182,8 @@ public class HyperzoomManagement : MonoBehaviour
         // go through each Camera
         foreach (Camera camera in cameras)
         {
-            // if this camera is not in our scene
-            if (camera.gameObject.scene != this.gameObject.scene)
+            // if this camera is in our scene
+            if (camera.gameObject.scene == this.gameObject.scene)
             {
                 //camera.gameObject.SetActive(false);
                 camera.clearFlags = clearFlags;

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using Cinemachine;
 
 public class Hyperzoom : HyperzoomManagement
@@ -146,6 +146,58 @@ public class Hyperzoom : HyperzoomManagement
     [Tooltip("Define the starting selected gameObject we are targeted on (optional - leave null for unselected-at-start)")]
     [SerializeField]
     private GameObject target;
+
+    #endregion
+
+
+    #region Listeners
+
+    /// <summary>
+    /// Whenever this Object/script is enabled
+    /// </summary>
+
+    void OnEnable()
+    {
+        // start listening for various types of interaction
+
+        // Movement
+        HyperzoomInteraction.DidRotate += Rotate;
+        HyperzoomInteraction.DidZoom += Zoom;
+        HyperzoomInteraction.DidZoomIn += ZoomIn;
+        HyperzoomInteraction.DidZoomOut += ZoomOut;
+        HyperzoomInteraction.DidFinishZoom += ZoomCleanup;
+        // Change of target
+        HyperzoomInteraction.DidChangeTarget += ChangeTarget;
+        HyperzoomInteraction.DidSelectNextTarget += SelectNextTarget;
+        HyperzoomInteraction.DidSelectPreviousTarget += SelectPreviousTarget;
+        // x-ray functions
+        HyperzoomPointer.TouchChanged += TouchChanged;
+        HyperzoomPointer.TouchDragged += TouchDragged;
+    }
+
+
+    /// <summary>
+    /// Whenever this Object/script is disabled
+    /// </summary>
+
+    void OnDisable()
+    {
+        // stop listening for various types of interaction
+
+        // Movement
+        HyperzoomInteraction.DidRotate -= Rotate;
+        HyperzoomInteraction.DidZoom -= Zoom;
+        HyperzoomInteraction.DidZoomIn -= ZoomIn;
+        HyperzoomInteraction.DidZoomOut -= ZoomOut;
+        HyperzoomInteraction.DidFinishZoom -= ZoomCleanup;
+        // Change of target
+        HyperzoomInteraction.DidChangeTarget -= ChangeTarget;
+        HyperzoomInteraction.DidSelectNextTarget -= SelectNextTarget;
+        HyperzoomInteraction.DidSelectPreviousTarget -= SelectPreviousTarget;
+        // x-ray functions
+        HyperzoomPointer.TouchChanged -= TouchChanged;
+        HyperzoomPointer.TouchDragged -= TouchDragged;
+    }
 
     #endregion
 
@@ -1215,58 +1267,6 @@ public class Hyperzoom : HyperzoomManagement
     float ConvertZoomToPct(float zoomValue)
     {
         return ((zoomValue - zoomMinimum) / (zoomMaximum - zoomMinimum));
-    }
-
-    #endregion
-
-
-    #region Listeners
-
-    /// <summary>
-    /// Whenever this Object/script is enabled
-    /// </summary>
-
-    void OnEnable()
-    {
-        // start listening for various types of interaction
-
-        // Movement
-        HyperzoomInteraction.DidRotate += Rotate;
-        HyperzoomInteraction.DidZoom += Zoom;
-        HyperzoomInteraction.DidZoomIn += ZoomIn;
-        HyperzoomInteraction.DidZoomOut += ZoomOut;
-        HyperzoomInteraction.DidFinishZoom += ZoomCleanup;
-        // Change of target
-        HyperzoomInteraction.DidChangeTarget += ChangeTarget;
-        HyperzoomInteraction.DidSelectNextTarget += SelectNextTarget;
-        HyperzoomInteraction.DidSelectPreviousTarget += SelectPreviousTarget;
-        // x-ray functions
-        HyperzoomPointer.TouchChanged += TouchChanged;
-        HyperzoomPointer.TouchDragged += TouchDragged;
-    }
-
-
-    /// <summary>
-    /// Whenever this Object/script is disabled
-    /// </summary>
-
-    void OnDisable()
-    {
-        // stop listening for various types of interaction
-
-        // Movement
-        HyperzoomInteraction.DidRotate -= Rotate;
-        HyperzoomInteraction.DidZoom -= Zoom;
-        HyperzoomInteraction.DidZoomIn -= ZoomIn;
-        HyperzoomInteraction.DidZoomOut -= ZoomOut;
-        HyperzoomInteraction.DidFinishZoom -= ZoomCleanup;
-        // Change of target
-        HyperzoomInteraction.DidChangeTarget -= ChangeTarget;
-        HyperzoomInteraction.DidSelectNextTarget -= SelectNextTarget;
-        HyperzoomInteraction.DidSelectPreviousTarget -= SelectPreviousTarget;
-        // x-ray functions
-        HyperzoomPointer.TouchChanged -= TouchChanged;
-        HyperzoomPointer.TouchDragged -= TouchDragged;
     }
 
     #endregion
