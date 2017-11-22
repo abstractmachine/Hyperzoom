@@ -83,9 +83,9 @@ Fungus
 This is a fork of the Fungus project (cf. https://github.com/fungusgames/fungus/). This code will not do anything on its own. It must be integrated into the FungusManager (cf. https://github.com/abstractmachine/FungusManager)
 
 
-Author
+Authors
 ======
-	This project was created by Douglas Edric Stanley (http://www.abstractmachine.net) for the Atelier Hypermédia of the Aix-en-Provence School of Art (cf. http://www.ecole-art-aix.fr) and for the Media Design Master of The Geneva University of Art & Design, –HEAD Genève (cf. http://head.hesge.ch). The interaction was designed by Douglas Edric Stanley and Robin Moretti (http://robinmoretti.eu). This interaction system is used in the project A Crossing Industry, a collaboration with Cédric Parizot, IREMAM (CNRS-AMU)/IMÉRA (cf. https://github.com/abstractmachine/ACrossingIndustry), Douglas Edric Stanley and Robin Moretti.
+This project was created by Douglas Edric Stanley (http://www.abstractmachine.net) for the Atelier Hypermédia of the Aix-en-Provence School of Art (cf. http://www.ecole-art-aix.fr) and for the Media Design Master of The Geneva University of Art & Design, –HEAD Genève (cf. http://head.hesge.ch). The interaction was designed by Douglas Edric Stanley and Robin Moretti (http://robinmoretti.eu). This interaction system is used in the project A Crossing Industry, a collaboration with Cédric Parizot, IREMAM (CNRS-AMU)/IMÉRA (cf. https://github.com/abstractmachine/ACrossingIndustry), Douglas Edric Stanley and Robin Moretti.
 
 License
 =======
