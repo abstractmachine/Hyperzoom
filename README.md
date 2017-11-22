@@ -21,19 +21,22 @@ These instructions describe how to create a basic project managed by the `Scene 
 1. Create a new folder named `Scenes` in your project
 2. Open SceneManager window via menu item `Tools > FungusManager > Scene Manager Window`
 3. Attach this `SceneManager` window to the Unity interface
-4. Click `Create 'SceneManager'` button. Point the file explorer to the `Scenes` folder created in step #1. This will create a `SceneManager.scene` in this folder
+4. Activate `Manually Bake Lighting` option
+5. Click `Create 'SceneManager'` button. Point the file explorer to the `Scenes` folder created in step #1. This will create a `SceneManager.scene` in this folder
+	- This will also save a folder named `SceneManager` containing the `LightingData` and `ReflectionProbe-0`. These are your baked lighting instructions and will have to be re-baked whenever you change models in your scene (sorry!)
+	- *Note: after each Light Bake, you will have to manually unfold the Scene triangle in the Hierarchy window (still working on this. Double-sorry! ;-)
 	- The `Scene Manager` window should now display the list of managed scenes (currently empty)
 	- The `Scene Manager` window should also display buttons for adding new scenes to the project
-5. The `Scene Management` flowchart has automatically created a `Scene Request` command on Game Start. Without this command, no scene would be loaded at the beginning of the game. By default this scene is named 'Start'. You will have to create this opening scene
+6. The `Scene Management` flowchart has automatically created a `Scene Request` command on Game Start. Without this command, no scene would be loaded at the beginning of the game. By default this scene is named 'Start'. You will have to create this opening scene
 	- If you wish to verify this command: in the `Hierarchy` window, open the `Flowcharts` Game Object triangle and select `SceneManagement`
 	- If the flowchart is not already attached to your interface: inside the `SceneManagement`'s `Inspector` window, push the `Open Flowchart Window` button. This will open the `SceneManagement` flowchart. Drag this `Flowchart` window's tab to attach it to the Unity interface
 	- Select the `<Game Started>` block with the label `Start`
 	- You should now see the `Request Scene' command
-6. Activate the `Add Hyperzoom` option
+7. Activate the `Add Hyperzoom` option
 	- You should see a toggle button marked `Add Hyperzoom`. It should be right below `Create New Scene`
 	- If you do not see an `Add Hyperzoom` option, you have not installed `Hyperzoom` & `Fungus Scene Manager` correctly. Cf. `Install` instructions
-7. Create a new scene named `Start` via the `Create New Scene` button. You can use the same folder from step #1
-8. In the `Scene Manager` window, under `Current Scenes`, press the `CLOSE` button next to the scene named `Start`
+8. Create a new scene named `Start` via the `Create New Scene` button. You can use the same folder from step #1
+9. In the `Scene Manager` window, under `Current Scenes`, press the `CLOSE` button next to the scene named `Start`
 9. Press the `Play` button in Unity and verify that the `SceneManager` successfully loads the `Start` scene
 
 Zoomable Objects
@@ -82,7 +85,7 @@ This is a fork of the Fungus project (cf. https://github.com/fungusgames/fungus/
 
 Author
 ======
-This project was created by Douglas Edric Stanley (http://www.abstractmachine.net) for the Atelier Hypermédia of the Aix-en-Provence School of Art (cf. http://www.ecole-art-aix.fr) and for the Media Design Master of The Geneva University of Art & Design, –HEAD Genève (cf. http://head.hesge.ch). It is notably used in the project A Crossing Industry, a collaboration with Cédric Parizot, IREMAM (CNRS-AMU)/IMÉRA (cf. https://github.com/abstractmachine/ACrossingIndustry)
+	This project was created by Douglas Edric Stanley (http://www.abstractmachine.net) for the Atelier Hypermédia of the Aix-en-Provence School of Art (cf. http://www.ecole-art-aix.fr) and for the Media Design Master of The Geneva University of Art & Design, –HEAD Genève (cf. http://head.hesge.ch). The interaction was designed by Douglas Edric Stanley and Robin Moretti (http://robinmoretti.eu). This interaction system is used in the project A Crossing Industry, a collaboration with Cédric Parizot, IREMAM (CNRS-AMU)/IMÉRA (cf. https://github.com/abstractmachine/ACrossingIndustry), Douglas Edric Stanley and Robin Moretti.
 
 License
 =======
