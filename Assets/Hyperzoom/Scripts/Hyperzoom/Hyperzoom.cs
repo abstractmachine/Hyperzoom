@@ -816,7 +816,8 @@ public class Hyperzoom : HyperzoomManagement
         if (target == null && zoomableTargets.Count == 1)
         {
             // force target to the first and only target
-            target = zoomableTargets[0];
+            //target = zoomableTargets[0];
+            ChangeTarget(zoomableTargets[0]);
         }
     }
 
