@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using Cinemachine;
 
 public class Hyperzoom : HyperzoomManagement
@@ -40,7 +39,7 @@ public class Hyperzoom : HyperzoomManagement
     [Tooltip("Define the zoom value of a zoomed-in camera")]
     [Range(0.0f, 100.0f)]
     [SerializeField]
-    private float zoomMinimum = 2.0f;
+    private float zoomInValue = 2.0f;
 
     /// <summary>
     /// The starting value for the virtual camera
@@ -48,7 +47,7 @@ public class Hyperzoom : HyperzoomManagement
     [Tooltip("Define the starting zoom value of the virtual camera")]
     [Range(0.0f, 100.0f)]
     [SerializeField]
-    private float zoomStart = 10.0f;
+    private float zoomStartValue = 10.0f;
 
     /// <summary>
     /// The zoomed-out value for the virtual camera
@@ -56,7 +55,7 @@ public class Hyperzoom : HyperzoomManagement
     [Tooltip("Define the zoom value of a zoomed-out camera")]
     [Range(0.0f, 100.0f)]
     [SerializeField]
-    private float zoomMaximum = 20.0f;
+    private float zoomOutValue = 20.0f;
 
     /// <summary>
     /// The speed multiplier for zooming the virtual camera
@@ -117,7 +116,7 @@ public class Hyperzoom : HyperzoomManagement
 
     private bool isOrthographic = false;
 
-    private float zoomStartingPct = 0.0f;
+    private float zoomStartingValue = 0.0f;
     private float zoomTargetPct = 0.5f;
     private float zoomFadeMargin = 0.25f;
     private float zoomPointOfNoReturn = 0.5f;
@@ -219,11 +218,11 @@ public class Hyperzoom : HyperzoomManagement
         isOrthographic = (brain != null) ? brain.OutputCamera.orthographic : false;
 
         // force the camera to the starting value
-        if (isOrthographic) freeLookCamera.m_Lens.OrthographicSize = zoomStart;
-        else freeLookCamera.m_Lens.FieldOfView = zoomStart;
+        if (isOrthographic) freeLookCamera.m_Lens.OrthographicSize = zoomStartValue;
+        else freeLookCamera.m_Lens.FieldOfView = zoomStartValue;
 
         // remember this starting value
-        zoomStartingPct = zoomTargetPct = ConvertZoomToPct(zoomStart);
+        zoomStartingValue = zoomTargetPct = ConvertZoomToPct(zoomStartValue);
 
         // adjust speed if we're an orthographic camera
         if (isOrthographic) zoomSpeed *= 0.2f;
@@ -321,7 +320,7 @@ public class Hyperzoom : HyperzoomManagement
         // try to force the virtual camera focus to free-look
         IncreaseFreeLookPriority();
 
-        float zoomMultiplier = (100.0f / (zoomMaximum - zoomMinimum)) * 0.1f;
+        float zoomMultiplier = (100.0f / (zoomOutValue - zoomInValue)) * 0.1f;
 
         delta *= zoomMultiplier;
 
@@ -739,7 +738,7 @@ public class Hyperzoom : HyperzoomManagement
         // rotate to original rotation
         //RotateToward(startingRotation);
         // rotate to original position
-        ZoomToward(zoomStartingPct);
+        ZoomToward(zoomStartingValue);
     }
 
 
@@ -1258,9 +1257,9 @@ public class Hyperzoom : HyperzoomManagement
     {
         float zoomValue = pctValue;
         // scale up to zoom range
-        zoomValue *= (zoomMaximum - zoomMinimum);
+        zoomValue *= (zoomOutValue - zoomInValue);
         // add bottom offset
-        zoomValue += zoomMinimum;
+        zoomValue += zoomInValue;
         // return result
         return zoomValue;
     }
@@ -1268,7 +1267,7 @@ public class Hyperzoom : HyperzoomManagement
 
     float ConvertZoomToPct(float zoomValue)
     {
-        return ((zoomValue - zoomMinimum) / (zoomMaximum - zoomMinimum));
+        return ((zoomValue - zoomInValue) / (zoomOutValue - zoomInValue));
     }
 
     #endregion
