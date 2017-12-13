@@ -11,8 +11,9 @@ public class Hyperzoom : HyperzoomManagement
     /// <summary>
     /// Reference to a transform when nothing is selected
     /// </summary>
-    [Tooltip("What should we look at when nothing is selected?")]
-    [SerializeField]
+    //[Tooltip("What should we look at when nothing is selected?")]
+    //[SerializeField]
+    [HideInInspector]
     private GameObject unselectedTarget;
 
     [Header("Virtual Cameras")]

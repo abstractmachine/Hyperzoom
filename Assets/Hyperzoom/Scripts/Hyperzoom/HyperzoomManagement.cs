@@ -24,8 +24,9 @@ public class HyperzoomManagement : MonoBehaviour
     /// <summary>
     /// The Input Prefab (with EventSystem)
     /// </summary>
-    [Tooltip("The Input Prefab (with EventSystem)")]
-    [SerializeField]
+    //[Tooltip("The Input Prefab (with EventSystem)")]
+    //[SerializeField]
+    [HideInInspector]
     private GameObject inputPrefab;
 
     #endregion
