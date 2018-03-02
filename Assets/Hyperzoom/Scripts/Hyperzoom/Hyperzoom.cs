@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using Cinemachine;
 
 public class Hyperzoom : HyperzoomManagement
@@ -10,9 +11,8 @@ public class Hyperzoom : HyperzoomManagement
     /// <summary>
     /// Reference to a transform when nothing is selected
     /// </summary>
-    //[Tooltip("What should we look at when nothing is selected?")]
-    //[SerializeField]
-    [HideInInspector]
+    [Tooltip("What should we look at when nothing is selected?")]
+    [SerializeField]
     private GameObject unselectedTarget;
 
     [Header("Virtual Cameras")]
@@ -39,7 +39,7 @@ public class Hyperzoom : HyperzoomManagement
     [Tooltip("Define the zoom value of a zoomed-in camera")]
     [Range(0.0f, 100.0f)]
     [SerializeField]
-    private float zoomInValue = 2.0f;
+    private float zoomMinimum = 2.0f;
 
     /// <summary>
     /// The starting value for the virtual camera
@@ -47,7 +47,7 @@ public class Hyperzoom : HyperzoomManagement
     [Tooltip("Define the starting zoom value of the virtual camera")]
     [Range(0.0f, 100.0f)]
     [SerializeField]
-    private float zoomStartValue = 10.0f;
+    private float zoomStart = 10.0f;
 
     /// <summary>
     /// The zoomed-out value for the virtual camera
@@ -55,7 +55,7 @@ public class Hyperzoom : HyperzoomManagement
     [Tooltip("Define the zoom value of a zoomed-out camera")]
     [Range(0.0f, 100.0f)]
     [SerializeField]
-    private float zoomOutValue = 20.0f;
+    private float zoomMaximum = 20.0f;
 
     /// <summary>
     /// The speed multiplier for zooming the virtual camera
@@ -116,7 +116,7 @@ public class Hyperzoom : HyperzoomManagement
 
     private bool isOrthographic = false;
 
-    private float zoomStartingValue = 0.0f;
+    private float zoomStartingPct = 0.0f;
     private float zoomTargetPct = 0.5f;
     private float zoomFadeMargin = 0.25f;
     private float zoomPointOfNoReturn = 0.5f;
@@ -218,11 +218,11 @@ public class Hyperzoom : HyperzoomManagement
         isOrthographic = (brain != null) ? brain.OutputCamera.orthographic : false;
 
         // force the camera to the starting value
-        if (isOrthographic) freeLookCamera.m_Lens.OrthographicSize = zoomStartValue;
-        else freeLookCamera.m_Lens.FieldOfView = zoomStartValue;
+        if (isOrthographic) freeLookCamera.m_Lens.OrthographicSize = zoomStart;
+        else freeLookCamera.m_Lens.FieldOfView = zoomStart;
 
         // remember this starting value
-        zoomStartingValue = zoomTargetPct = ConvertZoomToPct(zoomStartValue);
+        zoomStartingPct = zoomTargetPct = ConvertZoomToPct(zoomStart);
 
         // adjust speed if we're an orthographic camera
         if (isOrthographic) zoomSpeed *= 0.2f;
@@ -320,7 +320,7 @@ public class Hyperzoom : HyperzoomManagement
         // try to force the virtual camera focus to free-look
         IncreaseFreeLookPriority();
 
-        float zoomMultiplier = (100.0f / (zoomOutValue - zoomInValue)) * 0.1f;
+        float zoomMultiplier = (100.0f / (zoomMaximum - zoomMinimum)) * 0.1f;
 
         delta *= zoomMultiplier;
 
@@ -486,12 +486,19 @@ public class Hyperzoom : HyperzoomManagement
         // if we're zoomed in beyond low margin and something is selected
         if (zoomTargetPct < zoomFadeMargin)
         {
-            // if there is no target
-            if (target == null)
+            // if there is no target, or the target object is not valid (in 
+			if (target == null)
             {
                 // back up to edge of fade
                 snapTarget = zoomFadeMargin;
             }
+			else if (!fungusSceneManager.RequestedSceneIsValid())
+			{
+				// cite warning (careful children... behave yourselves)
+				Debug.LogWarning("Attempting to zoom into unhandled target '" + target.name + "'");
+				// back up to edge of fade
+				snapTarget = zoomFadeMargin;
+			}
             // if we're beyond the point of no return and the manager is present
             else if (zoomTargetPct <= zoomPointOfNoReturnLow && fungusSceneManager != null)
             {
@@ -509,10 +516,15 @@ public class Hyperzoom : HyperzoomManagement
 
         // if were zoomed out beyond high margin
         if (zoomTargetPct > 1.0f - zoomFadeMargin)
-        {
-
+		{
+			// if there is no currently requested target
+			if (!fungusSceneManager.RequestedSceneIsValid())
+			{
+				// abort force zoom out. Snap back to Margin edge
+				snapTarget = 1.0f - zoomFadeMargin;
+			}
             // if we're beyond the point of no return and the manager is present
-            if (zoomTargetPct >= zoomPointOfNoReturnHigh & fungusSceneManager != null)
+            else if (zoomTargetPct >= zoomPointOfNoReturnHigh & fungusSceneManager != null)
             {
                 // force zoom out
                 snapTarget = 1.0f;
@@ -738,7 +750,7 @@ public class Hyperzoom : HyperzoomManagement
         // rotate to original rotation
         //RotateToward(startingRotation);
         // rotate to original position
-        ZoomToward(zoomStartingValue);
+        ZoomToward(zoomStartingPct);
     }
 
 
@@ -1257,9 +1269,9 @@ public class Hyperzoom : HyperzoomManagement
     {
         float zoomValue = pctValue;
         // scale up to zoom range
-        zoomValue *= (zoomOutValue - zoomInValue);
+        zoomValue *= (zoomMaximum - zoomMinimum);
         // add bottom offset
-        zoomValue += zoomInValue;
+        zoomValue += zoomMinimum;
         // return result
         return zoomValue;
     }
@@ -1267,7 +1279,7 @@ public class Hyperzoom : HyperzoomManagement
 
     float ConvertZoomToPct(float zoomValue)
     {
-        return ((zoomValue - zoomInValue) / (zoomOutValue - zoomInValue));
+        return ((zoomValue - zoomMinimum) / (zoomMaximum - zoomMinimum));
     }
 
     #endregion

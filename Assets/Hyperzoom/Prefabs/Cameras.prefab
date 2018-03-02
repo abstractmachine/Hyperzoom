@@ -98,7 +98,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &1448377419196666
 GameObject:
-  m_ObjectHideFlags: 3
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
@@ -332,7 +332,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4761845263721322
 Transform:
-  m_ObjectHideFlags: 3
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1448377419196666}
@@ -414,7 +414,6 @@ Camera:
   m_TargetEye: 3
   m_HDR: 0
   m_AllowMSAA: 0
-  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -428,7 +427,7 @@ AudioListener:
   m_Enabled: 1
 --- !u!114 &114043402537279042
 MonoBehaviour:
-  m_ObjectHideFlags: 3
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1448377419196666}
@@ -544,7 +543,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
 --- !u!114 &114109685840213346
 MonoBehaviour:
-  m_ObjectHideFlags: 3
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1448377419196666}
@@ -642,11 +641,12 @@ MonoBehaviour:
   xrayBackground: {r: 0.33333334, g: 0.33333334, b: 0.33333334, a: 1}
   inputPrefab: {fileID: 1766069381715118, guid: bb92f96f4eb394277b6549423e27520b,
     type: 2}
+  unselectedTarget: {fileID: 1945465701382014}
   freeLookCamera: {fileID: 114158182341890830}
   unselectedCamera: {fileID: 0}
-  zoomInValue: 2
-  zoomStartValue: 10
-  zoomOutValue: 20
+  zoomMinimum: 2
+  zoomStart: 10
+  zoomMaximum: 20
   zoomSpeed: 0.5
   targetCurve:
     serializedVersion: 2
@@ -933,7 +933,7 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114719680158357678
 MonoBehaviour:
-  m_ObjectHideFlags: 3
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1448377419196666}
