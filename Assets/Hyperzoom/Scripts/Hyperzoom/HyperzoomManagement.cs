@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 using Fungus;
 
@@ -233,119 +234,112 @@ public class HyperzoomManagement : MonoBehaviour
 
     protected void MemorizeTargets()
     {
-        // clear the previous list (if for some reason it existed. Hmmm...)
         zoomableTargets.Clear();
 
-        // first start with the root GameObjects in this scene only
-        GameObject[] rootGameObjects = this.gameObject.scene.GetRootGameObjects();
-        // go through each root GameObject
-        foreach(GameObject rootGameObject in rootGameObjects)
+        Zoomable[] zoomableGameObjects = FindObjectsOfType<Zoomable>();
+        foreach (Zoomable zoomableGameObject in zoomableGameObjects)
         {
-            // find all the Zoomable componenets, including inactive gameobjects
-            Zoomable[] zoomableScripts = rootGameObject.GetComponentsInChildren<Zoomable>(true);
-            // go through each zoomable script
-            foreach (Zoomable zoomableScript in zoomableScripts)
-            {
-                // add it to our list
-                zoomableTargets.Add(zoomableScript.gameObject);
-            } 
+            zoomableTargets.Add(zoomableGameObject.gameObject);
         }
     } // MemorizeTargets()
 
 
     protected void MemorizeFaders()
     {
-        // first start with the root GameObjects in this scene only
-        GameObject[] rootGameObjects = this.gameObject.scene.GetRootGameObjects();
-
-        // go through each root GameObject
-        foreach(GameObject rootGameObject in rootGameObjects)
-        {
-            // now find all the zoomable objects, including inactive GameObjects
-            Zoomable[] zoomableScripts = rootGameObject.GetComponentsInChildren<Zoomable>(true);
-            // go through each zoomable script
-            foreach (Zoomable zoomableScript in zoomableScripts)
-            {
-                // get all the children inside this zoomable script
-                Renderer[] childRenderersOfFocusableGameObject = zoomableScript.gameObject.GetComponentsInChildren<Renderer>(true);
-                // go through all it's children
-                foreach (Renderer childRenderer in childRenderersOfFocusableGameObject)
-                {
-                    // memorize all the children under this renderer that has a renderer
-                    MemorizeChildFaders(zoomableScript.gameObject);
-                }
-
-                // TODO: Add Skinned Mesh Renderers to list
-                SkinnedMeshRenderer[] childSkinMeshRenderersOfFocusableGameObject = zoomableScript.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>(true);
-                // go through all it's children
-                foreach (SkinnedMeshRenderer childRenderer in childSkinMeshRenderersOfFocusableGameObject)
-                {
-                    // memorize all the children under this renderer that has a renderer
-                    MemorizeChildFaders(zoomableScript.gameObject);
-                }
-            }
-            // foreach(Zoomable
-        }
-        // foreach(GameObject
-
         // used for testing key-value pairs
         GameObject parentObjectTester;
-
-        // go through each root GameObject
-        foreach (GameObject rootGameObject in rootGameObjects)
+        // first go through all the focusable objects
+        Zoomable[] zoomableGameObjects = FindObjectsOfType<Zoomable>();
+        foreach (Zoomable zoomableGameObject in zoomableGameObjects)
         {
-            // go through all the renderers in this scene
-            Renderer[] possibleRenderers = rootGameObject.GetComponentsInChildren<Renderer>(true);
-            foreach (Renderer possibleRenderer in possibleRenderers)
+            // get all the children of this focusable object
+            Renderer[] childRenderersOfFocusableGameObject = zoomableGameObject.gameObject.GetComponentsInChildren<Renderer>();
+            // go through all its children
+            foreach (Renderer childRenderer in childRenderersOfFocusableGameObject)
             {
-                // if this is not a focusable object (and therefore not already in the list)
-                if (possibleRenderer.gameObject.GetComponent<Zoomable>() == null)
-                {
-                    GameObject possibleRendererGameObject = possibleRenderer.gameObject;
-                    // make sure it isn't already added
-                    if (zoomableFaders.TryGetValue(possibleRendererGameObject, out parentObjectTester)) continue;
-                    if (unzoomableFaders.TryGetValue(possibleRendererGameObject, out parentObjectTester)) continue;
-                    // ok, add it to the list of unfocuseable objects
-                    unzoomableFaders.Add(possibleRendererGameObject, possibleRenderer.gameObject);
-                }
-                // if (possibleRenderer.gameObject
+                // memorize all the children under this renderer that has a renderer
+                MemorizeChildFaders(zoomableGameObject.gameObject);
             }
-            // foreach(Renderer
-        }
-        // foreach(GameObject
 
-        // go through each root GameObject
-        foreach (GameObject rootGameObject in rootGameObjects)
+            // TODO: Add Skinned Mesh Renderers to list
+            SkinnedMeshRenderer[] childSkinMeshRenderersOfFocusableGameObject = zoomableGameObject.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+            // go through all its children
+            foreach (SkinnedMeshRenderer childRenderer in childSkinMeshRenderersOfFocusableGameObject)
+            {
+                // memorize all the children under this renderer that has a skinned mesh renderer
+                MemorizeChildFaders(zoomableGameObject.gameObject);
+            }
+
+			Text[] childTextsOfFocusableGameObject = zoomableGameObject.gameObject.GetComponentsInChildren<Text>();
+			// go through each of its children
+			foreach(Text text in childTextsOfFocusableGameObject)
+			{
+				// memorize all the children under this renderer that has a Text component
+				MemorizeChildFaders(zoomableGameObject.gameObject);
+			}
+        }
+
+        // go through all the renderers in this scene
+        Renderer[] possibleRenderers = FindObjectsOfType<Renderer>();
+        foreach (Renderer possibleRenderer in possibleRenderers)
         {
-            // get an array of all SkinnedMeshRenderers in this scene
-            SkinnedMeshRenderer[] possibleSkinnedMeshRenderers = rootGameObject.GetComponentsInChildren<SkinnedMeshRenderer>(true);
-            // go through each potential SkinnedMeshRenderer
-            foreach (SkinnedMeshRenderer possibleRenderer in possibleSkinnedMeshRenderers)
+            // if this is not a focusable object (and therefore not already in the list)
+            if (possibleRenderer.gameObject.GetComponent<Zoomable>() == null)
             {
-                // if this is not a focusable object (and therefore not already in the list)
-                if (possibleRenderer.gameObject.GetComponent<Zoomable>() == null)
-                {
-                    GameObject possibleRendererGameObject = possibleRenderer.gameObject;
-                    // make sure it isn't already added
-                    if (zoomableFaders.TryGetValue(possibleRendererGameObject, out parentObjectTester)) continue;
-                    if (unzoomableFaders.TryGetValue(possibleRendererGameObject, out parentObjectTester)) continue;
-                    // ok, add it to the list of unfocuseable objects
-                    unzoomableFaders.Add(possibleRendererGameObject, possibleRenderer.gameObject);
+                GameObject possibleRendererGameObject = possibleRenderer.gameObject;
+                // make sure it isn't already added
+                if (zoomableFaders.TryGetValue(possibleRendererGameObject, out parentObjectTester)) continue;
+                if (unzoomableFaders.TryGetValue(possibleRendererGameObject, out parentObjectTester)) continue;
+                // ok, add it to the list of unfocuseable objects
+                unzoomableFaders.Add(possibleRendererGameObject, possibleRenderer.gameObject);
 
-                }
-                // if (possibleRenderer
-            }
-            // foreach(SkinnedMeshRenderer
-        }
-        // foreach(GameObject
-    }
-    // MemorizeFaders()
+            } // if (possibleRenderer.gameObject
+
+        } // foreach(Renderer
+
+        // go through all the renderers in this scene
+        SkinnedMeshRenderer[] possibleSkinnedMeshRenderers = FindObjectsOfType<SkinnedMeshRenderer>();
+        foreach (SkinnedMeshRenderer possibleSkinnedMeshRenderer in possibleSkinnedMeshRenderers)
+        {
+            // if this is not a focusable object (and therefore not already in the list)
+            if (possibleSkinnedMeshRenderer.gameObject.GetComponent<Zoomable>() == null)
+            {
+                GameObject possibleSkinnedMeshRendererGameObject = possibleSkinnedMeshRenderer.gameObject;
+                // make sure it isn't already added
+                if (zoomableFaders.TryGetValue(possibleSkinnedMeshRendererGameObject, out parentObjectTester)) continue;
+                if (unzoomableFaders.TryGetValue(possibleSkinnedMeshRendererGameObject, out parentObjectTester)) continue;
+                // ok, add it to the list of unfocuseable objects
+                unzoomableFaders.Add(possibleSkinnedMeshRendererGameObject, possibleSkinnedMeshRenderer.gameObject);
+
+            } // if (possibleRenderer.gameObject
+
+		} // foreach(SkinnedMeshRenderer
+
+		// go through all the renderers in this scene
+		Text[] possibleTexts = FindObjectsOfType<Text>();
+		foreach (Text possibleText in possibleTexts)
+		{
+			// if this is not a focusable object (and therefore not already in the list)
+			if (possibleText.gameObject.GetComponent<Zoomable>() == null)
+			{
+				GameObject possibleTextGameObject = possibleText.gameObject;
+				// make sure it isn't already added
+				if (zoomableFaders.TryGetValue(possibleTextGameObject, out parentObjectTester)) continue;
+				if (unzoomableFaders.TryGetValue(possibleTextGameObject, out parentObjectTester)) continue;
+				// ok, add it to the list of unfocuseable objects
+				unzoomableFaders.Add(possibleTextGameObject, possibleText.gameObject);
+
+			} // if (possibleRenderer.gameObject
+
+		} // foreach(SkinnedMeshRenderer
+
+    } // MemorizeFaders()
 
 
     void MemorizeChildFaders(GameObject rootParentObject)
     {
         // we want to add all the children of this rootObject that contain Renderers
-        Renderer[] childRenderers = rootParentObject.GetComponentsInChildren<Renderer>(true);
+        Renderer[] childRenderers = rootParentObject.GetComponentsInChildren<Renderer>();
         // go through all it's children
         foreach (Renderer childRenderer in childRenderers)
         {
@@ -353,6 +347,8 @@ public class HyperzoomManagement : MonoBehaviour
             MemorizationCheckChild(rootParentObject, childRenderer.gameObject);
 
         } // foreach (Renderer
+
+		// TODO: Should we add SkinnedMeshRenderers & Texts ?
 
     } // MemorizeChildFaders()
 

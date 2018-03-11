@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEditor;
 using Cinemachine;
 
@@ -62,7 +63,23 @@ public class Hyperzoom : HyperzoomManagement
     /// </summary>
     [Tooltip("Define the speed multiplier for zooming in/out the virtual camera")]
     [SerializeField]
-    private float zoomSpeed = 0.5f;
+	private float zoomSpeed = 0.5f;
+
+	/// <summary>
+	/// The maximum vertical (x-axis rotation) angle of the virtual camera
+	/// </summary>
+	[Tooltip("Define the maximum vertical (x-axis rotation) angle of the virtual camera")]
+	[Range(-10.0f, 10.0f)]
+	[SerializeField]
+	private float verticalTopValue = 10.0f;
+
+	/// <summary>
+	/// The minimum vertical (x-axis rotation) angle of the virtual camera
+	/// </summary>
+	[Tooltip("Define the minimum vertical (x-axis rotation) angle of the virtual camera")]
+	[Range(-10.0f, 10.0f)]
+	[SerializeField]
+	private float verticalBottomValue = -10.0f;
 
     //[Header("X-Ray")]
 
@@ -230,6 +247,13 @@ public class Hyperzoom : HyperzoomManagement
         // figure out the points of no-return
         zoomPointOfNoReturnLow = zoomFadeMargin * zoomPointOfNoReturn;
         zoomPointOfNoReturnHigh = 1.0f - (zoomFadeMargin * zoomPointOfNoReturn);
+
+		// set the vertical min and max values of the virtual camera
+		CinemachineVirtualCamera topRig = freeLookCamera.GetRig(0);
+		CinemachineVirtualCamera middleRig = freeLookCamera.GetRig(1);
+		CinemachineVirtualCamera bottomRig = freeLookCamera.GetRig(2);
+
+
 
         // fade in scene
         HideEverything();
@@ -486,19 +510,12 @@ public class Hyperzoom : HyperzoomManagement
         // if we're zoomed in beyond low margin and something is selected
         if (zoomTargetPct < zoomFadeMargin)
         {
-            // if there is no target, or the target object is not valid (in 
-			if (target == null)
+            // if there is no target
+            if (target == null)
             {
                 // back up to edge of fade
                 snapTarget = zoomFadeMargin;
             }
-			else if (!fungusSceneManager.RequestedSceneIsValid())
-			{
-				// cite warning (careful children... behave yourselves)
-				Debug.LogWarning("Attempting to zoom into unhandled target '" + target.name + "'");
-				// back up to edge of fade
-				snapTarget = zoomFadeMargin;
-			}
             // if we're beyond the point of no return and the manager is present
             else if (zoomTargetPct <= zoomPointOfNoReturnLow && fungusSceneManager != null)
             {
@@ -516,15 +533,10 @@ public class Hyperzoom : HyperzoomManagement
 
         // if were zoomed out beyond high margin
         if (zoomTargetPct > 1.0f - zoomFadeMargin)
-		{
-			// if there is no currently requested target
-			if (!fungusSceneManager.RequestedSceneIsValid())
-			{
-				// abort force zoom out. Snap back to Margin edge
-				snapTarget = 1.0f - zoomFadeMargin;
-			}
+        {
+
             // if we're beyond the point of no return and the manager is present
-            else if (zoomTargetPct >= zoomPointOfNoReturnHigh & fungusSceneManager != null)
+            if (zoomTargetPct >= zoomPointOfNoReturnHigh & fungusSceneManager != null)
             {
                 // force zoom out
                 snapTarget = 1.0f;
@@ -622,6 +634,14 @@ public class Hyperzoom : HyperzoomManagement
         {
             return skinnedMeshRenderer.materials;
         }
+		// try to extract a Text
+		Text text = fadeObject.GetComponent<Text>();
+		if (text != null)
+		{
+			Material[] textMaterials = new Material[1];
+			textMaterials[0] = text.material;
+			return textMaterials;
+		}
         // error
         Debug.LogError("No Renderer or SkinnedMeshRenderer");
         return null;
@@ -828,8 +848,7 @@ public class Hyperzoom : HyperzoomManagement
         if (target == null && zoomableTargets.Count == 1)
         {
             // force target to the first and only target
-            //target = zoomableTargets[0];
-            ChangeTarget(zoomableTargets[0]);
+            target = zoomableTargets[0];
         }
     }
 
